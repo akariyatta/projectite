@@ -1,23 +1,35 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Alert, PageHead } from "@/components/admin/ui";
+import AdminForm, { Field } from "@/components/admin/AdminForm";
+import { PageHead } from "@/components/admin/ui";
 import { saveResource } from "@/lib/actions";
 import { requireAdmin } from "@/lib/auth";
 import { query } from "@/lib/db";
 import { label } from "@/lib/format";
-import { getResource } from "@/lib/resources";
+import { displayName, getResource } from "@/lib/resources";
 
-async function Input({ field, value }) {
+async function Input({ field, value, isNew }) {
   const v = value === null || value === undefined ? "" : String(value);
-  const common = { name: field.name, required: field.required, className: "adm-input" };
+  const common = {
+    name: field.name,
+    required: field.required,
+    maxLength: field.maxLength,
+    minLength: field.minLength,
+    pattern: field.pattern,
+    title: field.title,
+    placeholder: field.placeholder,
+    className: "adm-input",
+  };
 
   switch (field.type) {
     case "textarea":
       return <textarea {...common} rows={field.name === "plan" ? 12 : 4} defaultValue={v} />;
     case "number":
-      return <input {...common} type="number" min="0" defaultValue={v} />;
+      return <input {...common} type="number" min={field.min ?? 0} max={field.max} step="1" defaultValue={v} />;
     case "money":
-      return <input {...common} type="number" min="0" step="0.01" defaultValue={v} />;
+      return <input {...common} type="number" min={field.min ?? 0} step="0.01" placeholder="0.00" defaultValue={v} />;
+    case "email":
+      return <input {...common} type="email" autoComplete="off" defaultValue={v} />;
     case "stars":
       return (
         <select {...common} defaultValue={v || "3"}>
@@ -29,7 +41,7 @@ async function Input({ field, value }) {
     case "datetime":
       return <input {...common} type="datetime-local" defaultValue={v.slice(0, 16).replace(" ", "T")} />;
     case "password":
-      return <input name={field.name} type="password" className="adm-input" autoComplete="new-password" />;
+      return <input {...common} required={isNew} type="password" autoComplete="new-password" />;
     case "image":
       return (
         <>
@@ -54,16 +66,21 @@ async function Input({ field, value }) {
       );
     }
     default:
-      return <input {...common} type="text" defaultValue={v} />;
+      return <input {...common} type="text" defaultValue={v} style={field.upper ? { textTransform: "uppercase" } : undefined} />;
   }
+}
+
+function hintFor(field, isNew) {
+  if (field.type === "password") return isNew ? `อย่างน้อย ${field.minLength ?? 8} ตัวอักษร` : "เว้นว่างไว้ถ้าไม่ต้องการเปลี่ยนรหัสผ่าน";
+  if (field.type === "image") return "วางลิงก์รูปจากเว็บ (ขึ้นต้นด้วย https://)";
+  return field.hint;
 }
 
 const WIDE = ["textarea", "image", "password"];
 
-export default async function ResourceForm({ params, searchParams }) {
+export default async function ResourceForm({ params }) {
   await requireAdmin();
   const { resource, id } = await params;
-  const { error } = await searchParams;
   const res = getResource(resource);
   if (!res) notFound();
 
@@ -79,12 +96,11 @@ export default async function ResourceForm({ params, searchParams }) {
       <Link href={`/admin/${resource}`} className="adm-back">← กลับไปหน้า{res.title}</Link>
       <PageHead
         eyebrow={isNew ? "Create" : `Edit · #${id}`}
-        title={isNew ? `เพิ่ม${res.title}` : row.name ?? row.title ?? `แก้ไข${res.title}`}
+        title={isNew ? `เพิ่ม${res.title}` : displayName(res, row)}
+        subtitle={<>ช่องที่มี <span className="adm-req">*</span> ต้องกรอก</>}
       />
 
-      <Alert error={error} />
-
-      <form action={saveResource.bind(null, resource, isNew ? null : Number(id))} className="adm-card adm-form">
+      <AdminForm action={saveResource.bind(null, resource, isNew ? null : Number(id))} cancelHref={`/admin/${resource}`}>
         <div className="adm-form-grid">
           {res.fields.map((f) =>
             f.type === "checkbox" ? (
@@ -93,18 +109,21 @@ export default async function ResourceForm({ params, searchParams }) {
                 {f.label}
               </label>
             ) : (
-              <label key={f.name} className={`adm-field ${WIDE.includes(f.type) ? "adm-field-wide" : ""}`}>
-                <span>{f.label} {f.required && <span className="adm-req">*</span>}</span>
-                <Input field={f} value={isNew ? undefined : row[f.name]} />
-              </label>
+              <Field
+                key={f.name}
+                name={f.name}
+                label={f.label}
+                required={f.required || (f.type === "password" && isNew)}
+                hint={hintFor(f, isNew)}
+                suffix={f.suffix}
+                wide={WIDE.includes(f.type)}
+              >
+                <Input field={f} value={isNew ? undefined : row[f.name]} isNew={isNew} />
+              </Field>
             ),
           )}
         </div>
-        <div className="adm-row">
-          <button className="adm-btn">บันทึก</button>
-          <Link href={`/admin/${resource}`} className="adm-btn-ghost">ยกเลิก</Link>
-        </div>
-      </form>
+      </AdminForm>
     </div>
   );
 }

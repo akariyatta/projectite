@@ -1,7 +1,9 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import "@/components/admin/admin.css";
 import { adminFonts } from "@/components/admin/fonts";
 import Nav from "@/components/admin/Nav";
+import Toast from "@/components/admin/Toast";
 import { logout } from "@/lib/actions";
 import { requireAdmin } from "@/lib/auth";
 
@@ -31,6 +33,9 @@ export default async function AdminLayout({ children }) {
         </div>
       </aside>
       <main className="adm-main">{children}</main>
+      <Suspense>
+        <Toast />
+      </Suspense>
     </div>
   );
 }

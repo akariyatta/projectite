@@ -1,8 +1,25 @@
 -- ข้อมูลตัวอย่าง (Import หลัง schema.sql)
 --
+-- ⚠ Import ซ้ำได้ — แต่จะ "ล้างข้อมูลทุกตาราง" แล้วใส่ข้อมูลตัวอย่างใหม่
+--   (ข้อมูลที่เพิ่ม/แก้ในหลังบ้าน และรหัสผ่านที่เปลี่ยนไว้ จะกลับเป็นค่าเริ่มต้น)
+--
 -- บัญชีแอดมิน: Achi, Boom, Rey (รหัสผ่านแจ้งกันทางแชตส่วนตัว — เปลี่ยนได้ที่หลังบ้าน > ผู้ดูแลระบบ)
 -- บัญชีลูกค้าตัวอย่าง: somchai@example.com, suda@example.com / customer1234
 USE travel_booking;
+
+SET FOREIGN_KEY_CHECKS = 0;
+TRUNCATE TABLE payments;
+TRUNCATE TABLE booking_items;
+TRUNCATE TABLE bookings;
+TRUNCATE TABLE trip_plans;
+TRUNCATE TABLE event_tickets;
+TRUNCATE TABLE events;
+TRUNCATE TABLE flights;
+TRUNCATE TABLE rooms;
+TRUNCATE TABLE hotels;
+TRUNCATE TABLE users;
+TRUNCATE TABLE admins;
+SET FOREIGN_KEY_CHECKS = 1;
 
 INSERT INTO admins (name, email, password_hash) VALUES
 ('Achi', 'achi@hoteltravel.local', '$2b$10$6cKIyDBmvyw02KFKN45o0OeYNoiUbOuAq6LNH/tuRoy9RKaSTQZAC'),
