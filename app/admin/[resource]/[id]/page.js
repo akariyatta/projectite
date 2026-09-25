@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import AdminForm, { Field } from "@/components/admin/AdminForm";
+import ImageInput from "@/components/admin/ImageInput";
 import { PageHead } from "@/components/admin/ui";
 import { saveResource } from "@/lib/actions";
 import { requireAdmin } from "@/lib/auth";
@@ -43,13 +44,7 @@ async function Input({ field, value, isNew }) {
     case "password":
       return <input {...common} required={isNew} type="password" autoComplete="new-password" />;
     case "image":
-      return (
-        <>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          {v && <img src={v} alt="" className="adm-preview" />}
-          <input {...common} type="url" placeholder="https://…" defaultValue={v} />
-        </>
-      );
+      return <ImageInput name={field.name} defaultValue={v} maxLength={field.maxLength} />;
     case "select":
       return (
         <select {...common} defaultValue={v}>
@@ -72,7 +67,7 @@ async function Input({ field, value, isNew }) {
 
 function hintFor(field, isNew) {
   if (field.type === "password") return isNew ? `อย่างน้อย ${field.minLength ?? 8} ตัวอักษร` : "เว้นว่างไว้ถ้าไม่ต้องการเปลี่ยนรหัสผ่าน";
-  if (field.type === "image") return "วางลิงก์รูปจากเว็บ (ขึ้นต้นด้วย https://)";
+  if (field.type === "image") return "อัปโหลดจากเครื่อง หรือวางลิงก์รูปจากเว็บ";
   return field.hint;
 }
 

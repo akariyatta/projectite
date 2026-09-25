@@ -37,6 +37,8 @@ components/admin/Toast.js       แจ้งเตือน "สำเร็จ"
 app/login               หน้าเข้าสู่ระบบ
 app/admin               หน้าหลังบ้านทั้งหมด
 app/admin/reports       รายงานยอดขายรายเดือน + ดาวน์โหลด CSV (ข้อมูลจาก lib/reports.js)
+app/admin/upload        รับไฟล์รูปที่อัปโหลด (แอดมินเท่านั้น) → บันทึกใน uploads/
+app/uploads/[name]      แสดงรูปที่อัปโหลด — หน้าบ้านใช้ <img src={hotel.image_url}> ได้เลย
 components/admin        สไตล์และคอมโพเนนต์ของหลังบ้าน (class ขึ้นต้น adm- ไม่ชนกับหน้าบ้าน)
 ```
 
@@ -48,4 +50,6 @@ components/admin        สไตล์และคอมโพเนนต์�
 - การจอง: สร้าง 1 แถวใน `bookings` + หลายแถวใน `booking_items` (`item_type` = room / flight / ticket) + 1 แถวใน `payments`
 - ตาราง `users` = ลูกค้าเท่านั้น ส่วนแอดมินอยู่ตาราง `admins` แยกกัน — ระบบล็อกอินหน้าบ้านให้ใช้ `users` อย่างเดียว
 - รหัสผ่านลูกค้าเก็บเป็น bcrypt ใน `users.password_hash` (ใช้แพ็กเกจ `bcryptjs`)
+- `image_url` เป็นได้ทั้งลิงก์เว็บ (`https://…`) หรือไฟล์ที่อัปโหลด (`/uploads/…`) — ใช้ใน `<img src>` ได้เหมือนกัน
+  - ไฟล์ที่อัปโหลดอยู่ในโฟลเดอร์ `uploads/` ของเครื่องที่อัปโหลด (ไม่ขึ้น GitHub เหมือนฐานข้อมูล)
 - แผนเที่ยว AI บันทึกลง `trip_plans` (`prompt` = คำขอ, `plan` = ผลลัพธ์จาก AI)

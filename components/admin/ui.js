@@ -25,8 +25,10 @@ export function PageHead({ eyebrow, title, subtitle, children }) {
 }
 
 export function Thumb({ src, name }) {
+  // Unsplash resizes on the fly — ask for a small version for the 64px thumbnail
+  const small = src?.includes("images.unsplash.com") ? src.replace(/([?&])w=\d+/, "$1w=160") : src;
   // eslint-disable-next-line @next/next/no-img-element
-  if (src) return <img src={src} alt="" className="adm-thumb" />;
+  if (src) return <img src={small} alt="" className="adm-thumb" loading="lazy" />;
   return <div className="adm-thumb">{String(name ?? "?").charAt(0)}</div>;
 }
 
