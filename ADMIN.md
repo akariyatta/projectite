@@ -30,7 +30,9 @@ database/seed.sql       ข้อมูลตัวอย่าง
 lib/db.js               query(sql, params) — ใช้ต่อในหน้าบ้านได้เลย
 lib/auth.js             session ของแอดมิน
 lib/actions.js          Server Actions ของหลังบ้าน
-lib/resources.js        ตั้งค่าหน้าเพิ่ม/แก้/ลบ (เพิ่มคอลัมน์ใหม่ได้ที่นี่)
+lib/resources.js        ตั้งค่าหน้าเพิ่ม/แก้/ลบ + กฎตรวจข้อมูล (เพิ่มคอลัมน์ใหม่ได้ที่นี่)
+components/admin/AdminForm.js   ฟอร์มที่ตรวจข้อมูลเป็นภาษาไทยก่อนบันทึก
+components/admin/Toast.js       แจ้งเตือน "สำเร็จ" / error (ส่งผ่าน ?ok= / ?error= ใน URL)
 app/login               หน้าเข้าสู่ระบบ
 app/admin               หน้าหลังบ้านทั้งหมด
 components/admin        สไตล์และคอมโพเนนต์ของหลังบ้าน (class ขึ้นต้น adm- ไม่ชนกับหน้าบ้าน)

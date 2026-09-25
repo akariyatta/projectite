@@ -63,7 +63,14 @@
   text-transform: uppercase;
   color: var(--gold-2);
 }
-.adm-nav { display: flex; flex-direction: column; gap: 2px; overflow-y: auto; }
+.adm-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(214, 182, 122, 0.35) transparent;
+}
 .adm-nav-group {
   font-size: 12px;
   letter-spacing: 0.04em;
@@ -363,4 +370,112 @@ textarea.adm-input { resize: vertical; }
   .adm-grid-4 { grid-template-columns: 1fr 1fr; gap: 12px; }
   .adm-stat-value { font-size: 22px; }
   .adm-card { padding: 18px; }
+}
+
+/* ---------- Validation ---------- */
+.adm-field.has-error > span { color: var(--danger); }
+.adm-field.has-error .adm-input { border-color: var(--danger); background: #fffafa; }
+.adm-field.has-error .adm-input:focus { box-shadow: 0 0 0 3px rgba(180, 64, 58, 0.15); }
+.adm-field-error { color: var(--danger); font-size: 12.5px; font-weight: 500; }
+.adm-field-error::before { content: "⚠ "; }
+.adm-hint { color: var(--muted); font-size: 12.5px; }
+.adm-input-wrap { position: relative; }
+.adm-input-wrap .adm-input { padding-right: 56px; }
+.adm-suffix {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+  font-size: 13px;
+  pointer-events: none;
+}
+.adm-root button:disabled { opacity: 0.6; cursor: progress; }
+.adm-btn-red { background: var(--danger); border-color: var(--danger); color: #fff; }
+.adm-btn-red:hover { background: #9a342f; }
+
+/* ---------- Toast ---------- */
+.adm-toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: min(420px, calc(100vw - 32px));
+  padding: 14px 14px 14px 16px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-left: 4px solid #2f7d57;
+  border-radius: 12px;
+  box-shadow: 0 18px 40px -12px rgba(19, 35, 63, 0.35);
+  font-size: 14px;
+  font-weight: 500;
+  animation: adm-toast-in 0.25s ease-out;
+}
+.adm-toast-error { border-left-color: var(--danger); }
+.adm-toast-icon {
+  width: 26px;
+  height: 26px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: #2f7d57;
+  font-weight: 700;
+}
+.adm-toast-error .adm-toast-icon { background: var(--danger); }
+.adm-toast-text { flex: 1; }
+.adm-toast-close {
+  background: none;
+  border: 0;
+  font-size: 20px;
+  line-height: 1;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 0 4px;
+}
+@keyframes adm-toast-in {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ---------- Confirm dialog ---------- */
+.adm-dialog {
+  margin: auto; /* front-site globals.css resets * { margin: 0 }, which un-centers <dialog> */
+  border: 0;
+  padding: 0;
+  border-radius: 16px;
+  width: min(400px, calc(100vw - 32px));
+  box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.45);
+  font-family: var(--font-body), system-ui, sans-serif;
+  color: var(--ink);
+}
+.adm-dialog::backdrop { background: rgba(13, 26, 49, 0.55); backdrop-filter: blur(2px); }
+.adm-dialog-body { padding: 28px 26px 22px; text-align: center; border-top: 4px solid var(--gold); }
+.adm-dialog-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 12px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 24px;
+  font-weight: 700;
+  background: var(--gold-soft);
+  color: var(--gold);
+}
+.adm-dialog-icon.is-danger { background: #f9e7e5; color: var(--danger); }
+.adm-dialog h3 { font-size: 18px; color: var(--navy); font-family: var(--font-body), sans-serif; font-weight: 700; }
+.adm-dialog p { color: var(--muted); font-size: 14px; margin-top: 6px; }
+.adm-dialog-actions { display: flex; gap: 10px; justify-content: center; margin-top: 22px; }
+.adm-dialog-actions > * { flex: 1; }
+
+/* ---------- Pager ---------- */
+.adm-pager { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+
+@media (max-width: 520px) {
+  .adm-toast { top: auto; bottom: 16px; right: 16px; left: 16px; max-width: none; }
 }

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Alert, Badge, PageHead } from "@/components/admin/ui";
+import SubmitButton from "@/components/admin/SubmitButton";
+import { Badge, PageHead } from "@/components/admin/ui";
 import { updateBooking, updatePayment } from "@/lib/actions";
 import { requireAdmin } from "@/lib/auth";
 import { query } from "@/lib/db";
@@ -8,10 +9,9 @@ import { baht, label } from "@/lib/format";
 
 const ICON = { room: "🛏️", flight: "✈️", ticket: "🎟️" };
 
-export default async function BookingDetail({ params, searchParams }) {
+export default async function BookingDetail({ params }) {
   await requireAdmin();
   const { id } = await params;
-  const { saved } = await searchParams;
 
   const [booking] = await query(
     `SELECT b.*, u.name, u.email, u.phone FROM bookings b JOIN users u ON u.id = b.user_id WHERE b.id = ?`,
@@ -30,7 +30,6 @@ export default async function BookingDetail({ params, searchParams }) {
         <Badge value={booking.status} />
       </PageHead>
 
-      <Alert ok={saved && "บันทึกเรียบร้อยแล้ว"} />
 
       <div className="adm-grid adm-grid-2">
         <div className="adm-stack">
@@ -74,7 +73,7 @@ export default async function BookingDetail({ params, searchParams }) {
                           <select name="status" defaultValue={p.status} className="adm-input" style={{ width: 150 }}>
                             {["pending", "paid", "failed", "refunded"].map((s) => <option key={s} value={s}>{label(s)}</option>)}
                           </select>
-                          <button className="adm-btn-ghost" style={{ padding: "8px 12px" }}>อัปเดต</button>
+                          <SubmitButton className="adm-btn-ghost" style={{ padding: "8px 12px" }} pendingText="…">อัปเดต</SubmitButton>
                         </form>
                       </td>
                     </tr>
@@ -110,7 +109,7 @@ export default async function BookingDetail({ params, searchParams }) {
               <span>บันทึกภายใน</span>
               <textarea name="note" rows={4} defaultValue={booking.note ?? ""} className="adm-input" placeholder="เช่น ลูกค้าขอเตียงเสริม" />
             </label>
-            <button className="adm-btn">บันทึก</button>
+            <SubmitButton>บันทึก</SubmitButton>
           </form>
         </div>
       </div>

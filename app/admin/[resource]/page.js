@@ -1,12 +1,14 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import ConfirmButton from "@/components/admin/ConfirmButton";
-import { Alert, Badge, PageHead, Stars, Thumb } from "@/components/admin/ui";
+import { Badge, PageHead, Stars, Thumb } from "@/components/admin/ui";
 import { deleteResource } from "@/lib/actions";
 import { requireAdmin } from "@/lib/auth";
 import { query } from "@/lib/db";
 import { baht } from "@/lib/format";
-import { getResource } from "@/lib/resources";
+import { displayName, getResource } from "@/lib/resources";
+
+const PER_PAGE = 20;
 
 function Cell({ field, row, refs }) {
   const v = row[field.name];
@@ -26,17 +28,23 @@ function Cell({ field, row, refs }) {
 export default async function ResourceList({ params, searchParams }) {
   await requireAdmin();
   const { resource } = await params;
-  const { q, error } = await searchParams;
+  const { q, page } = await searchParams;
   const res = getResource(resource);
   if (!res) notFound();
 
   const cols = res.fields.filter((f) => f.list);
   const search = typeof q === "string" ? q.trim() : "";
   const where = search ? `WHERE ${res.search.map((c) => `\`${c}\` LIKE ?`).join(" OR ")}` : "";
+  const args = search ? res.search.map(() => `%${search}%`) : [];
+
+  const [{ total }] = await query(`SELECT COUNT(*) AS total FROM \`${res.table}\` ${where}`, args);
+  const pages = Math.max(1, Math.ceil(total / PER_PAGE));
+  const current = Math.min(Math.max(1, Number(page) || 1), pages);
   const rows = await query(
-    `SELECT * FROM \`${res.table}\` ${where} ORDER BY id DESC LIMIT 200`,
-    search ? res.search.map(() => `%${search}%`) : [],
+    `SELECT * FROM \`${res.table}\` ${where} ORDER BY id DESC LIMIT ? OFFSET ?`,
+    [...args, PER_PAGE, (current - 1) * PER_PAGE],
   );
+  const pageHref = (p) => `/admin/${resource}?${new URLSearchParams({ ...(search && { q: search }), page: p })}`;
 
   // Look up display names for foreign-key columns
   const refs = {};
@@ -55,12 +63,14 @@ export default async function ResourceList({ params, searchParams }) {
         <Link href={`/admin/${resource}/new`} className="adm-btn adm-btn-gold">+ เพิ่ม{res.title}</Link>
       </PageHead>
 
-      <Alert error={error} />
-
-      <form className="adm-search">
-        <input name="q" defaultValue={search} placeholder={`ค้นหา${res.title}…`} className="adm-input" />
-        <button className="adm-btn-ghost">ค้นหา</button>
-      </form>
+      <div className="adm-row" style={{ justifyContent: "space-between" }}>
+        <form className="adm-search">
+          <input name="q" defaultValue={search} placeholder={`ค้นหา${res.title}…`} className="adm-input" />
+          <button className="adm-btn-ghost">ค้นหา</button>
+          {search && <Link href={`/admin/${resource}`} className="adm-btn-text">ล้าง</Link>}
+        </form>
+        <span className="adm-muted">{search ? `พบ ${total} รายการ` : `ทั้งหมด ${total} รายการ`}</span>
+      </div>
 
       <div className="adm-card adm-card-flush">
         <div className="adm-table-wrap">
@@ -73,7 +83,9 @@ export default async function ResourceList({ params, searchParams }) {
               </tr>
             </thead>
             <tbody>
-              {rows.length === 0 && <tr><td colSpan={cols.length + 2} className="adm-empty">ไม่มีข้อมูล</td></tr>}
+              {rows.length === 0 && (
+                <tr><td colSpan={cols.length + 2} className="adm-empty">{search ? `ไม่พบ “${search}”` : "ยังไม่มีข้อมูล — กด “เพิ่ม” เพื่อเริ่ม"}</td></tr>
+              )}
               {rows.map((row) => (
                 <tr key={row.id}>
                   <td className="adm-muted">{row.id}</td>
@@ -85,7 +97,13 @@ export default async function ResourceList({ params, searchParams }) {
                   <td className="adm-actions">
                     <Link href={`/admin/${resource}/${row.id}`} className="adm-btn-text">แก้ไข</Link>
                     <form action={deleteResource.bind(null, resource, row.id)} style={{ display: "inline" }}>
-                      <ConfirmButton className="adm-btn-text adm-btn-danger" message={`ลบ${res.title} #${row.id}?`}>ลบ</ConfirmButton>
+                      <ConfirmButton
+                        className="adm-btn-text adm-btn-danger"
+                        title={`ลบ${res.title} “${displayName(res, row)}”?`}
+                        message="ข้อมูลที่ลบแล้วจะกู้คืนไม่ได้"
+                      >
+                        ลบ
+                      </ConfirmButton>
                     </form>
                   </td>
                 </tr>
@@ -94,6 +112,14 @@ export default async function ResourceList({ params, searchParams }) {
           </table>
         </div>
       </div>
+
+      {pages > 1 && (
+        <nav className="adm-pager">
+          {current > 1 ? <Link href={pageHref(current - 1)} className="adm-btn-ghost">← ก่อนหน้า</Link> : <span />}
+          <span className="adm-muted">หน้า {current} / {pages}</span>
+          {current < pages ? <Link href={pageHref(current + 1)} className="adm-btn-ghost">ถัดไป →</Link> : <span />}
+        </nav>
+      )}
     </div>
   );
 }

@@ -4,6 +4,8 @@ import { requireAdmin } from "@/lib/auth";
 import { query } from "@/lib/db";
 import { baht, label } from "@/lib/format";
 
+const THAI_MONTHS = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
+
 export default async function Dashboard() {
   const admin = await requireAdmin();
   const [[stats], byStatus, recent, arrivals] = await Promise.all([
@@ -93,7 +95,7 @@ export default async function Dashboard() {
               {arrivals.map((a, i) => (
                 <Link key={i} href={`/admin/bookings/${a.booking_id}`} style={{ display: "flex", gap: 12, alignItems: "center" }}>
                   <div className="adm-thumb" style={{ width: 48, height: 48, fontSize: 13, lineHeight: 1.1, textAlign: "center" }}>
-                    {a.start_date.slice(8, 10)}<br />{a.start_date.slice(5, 7)}
+                    {Number(a.start_date.slice(8, 10))}<br />{THAI_MONTHS[Number(a.start_date.slice(5, 7)) - 1]}
                   </div>
                   <div style={{ minWidth: 0 }}>
                     <div style={{ fontWeight: 600, fontSize: 14 }}>{a.description}</div>
