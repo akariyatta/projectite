@@ -766,3 +766,56 @@ a.adm-plan-title:hover { color: var(--gold); }
   .adm-tl-cost { grid-column: 1 / 3; text-align: left; }
   .adm-add { margin-left: 0; max-width: none; }
 }
+/* ---------- Password strength ---------- */
+.adm-strength { display: grid; gap: 4px; margin-top: -8px; }
+.adm-strength > div { height: 6px; border-radius: 3px; background: #f1ece2; overflow: hidden; }
+.adm-strength span { display: block; height: 100%; border-radius: 3px; background: var(--danger); transition: width 0.2s; }
+.adm-strength[data-level="3"] span { background: #c98a2b; }
+.adm-strength[data-level="4"] span, .adm-strength[data-level="5"] span { background: #2f7d57; }
+.adm-strength small { color: var(--muted); font-size: 12px; }
+
+/* ---------- Audit log ---------- */
+.adm-audit { list-style: none; }
+.adm-audit li {
+  display: grid;
+  grid-template-columns: 64px 1fr auto;
+  gap: 16px;
+  padding: 14px 20px;
+  border-bottom: 1px solid #f1ece2;
+}
+.adm-audit li:last-child { border-bottom: 0; }
+.adm-audit-when { display: grid; text-align: right; font-size: 12px; color: var(--muted); }
+.adm-audit-when strong { font-size: 15px; color: var(--navy); }
+.adm-audit-body { display: grid; gap: 4px; min-width: 0; }
+.adm-audit-summary { font-size: 14px; }
+.adm-audit-ip { font-size: 11.5px; font-variant-numeric: tabular-nums; }
+.adm-audit details summary { cursor: pointer; color: var(--gold); font-size: 13px; }
+.adm-audit-diff { margin-top: 8px; font-size: 13px; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.adm-audit-diff td, .adm-audit-diff th { padding: 6px 10px; font-size: 12.5px; }
+.adm-diff-old { color: #9a302a; text-decoration: line-through; text-decoration-color: rgba(154, 48, 42, 0.4); }
+.adm-diff-new { color: #226246; font-weight: 600; }
+
+/* ---------- Room availability ---------- */
+.adm-occ th:not(:first-child) { text-align: center; padding: 8px 4px; line-height: 1.2; }
+.adm-occ th span { display: block; font-size: 10.5px; font-weight: 500; }
+.adm-occ th strong { display: block; font-size: 15px; color: var(--navy); }
+.adm-occ th.is-today { background: var(--gold-soft); }
+.adm-occ td:not(:first-child) {
+  text-align: center;
+  padding: 10px 4px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  border-left: 2px solid #fff;
+  min-width: 46px;
+}
+.adm-occ td small { font-weight: 400; opacity: 0.6; }
+.adm-occ td:first-child { min-width: 200px; }
+.adm-occ--free { background: #eef6f0; color: #226246; }
+.adm-occ--some { background: #fbf3e3; color: #7a5412; }
+.adm-occ--most { background: #f8e2d4; color: #8e3f16; }
+.adm-occ--full { background: #f3d4d1; color: #8e2d27; }
+.adm-occ-key { display: inline-block; width: 14px; height: 14px; border-radius: 3px; border: 1px solid rgba(19, 35, 63, 0.18); vertical-align: -1px; margin-right: 4px; }
+@media (max-width: 860px) {
+  .adm-audit li { grid-template-columns: 52px 1fr; }
+  .adm-audit-ip { display: none; }
+}

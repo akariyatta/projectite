@@ -3,7 +3,7 @@
 -- ⚠ Import ซ้ำได้ — แต่จะ "ล้างข้อมูลทุกตาราง" แล้วใส่ข้อมูลตัวอย่างใหม่
 --   (ข้อมูลที่เพิ่ม/แก้ในหลังบ้าน และรหัสผ่านที่เปลี่ยนไว้ จะกลับเป็นค่าเริ่มต้น)
 --
--- บัญชีแอดมิน: Achi, Boom, Rey (รหัสผ่านแจ้งกันทางแชตส่วนตัว — เปลี่ยนได้ที่หลังบ้าน > ผู้ดูแลระบบ)
+-- บัญชีแอดมิน: Achi, Boom, Rey (รหัสชั่วคราวแจ้งกันทางแชตส่วนตัว — ระบบบังคับตั้งรหัสใหม่ตอนล็อกอินครั้งแรก)
 -- บัญชีลูกค้าตัวอย่าง: somchai@example.com, suda@example.com / customer1234
 USE travel_booking;
 
@@ -19,6 +19,8 @@ TRUNCATE TABLE rooms;
 TRUNCATE TABLE hotels;
 TRUNCATE TABLE users;
 TRUNCATE TABLE admins;
+TRUNCATE TABLE admin_login_attempts;
+TRUNCATE TABLE audit_logs;
 SET FOREIGN_KEY_CHECKS = 1;
 
 INSERT INTO admins (name, email, password_hash) VALUES
@@ -47,9 +49,9 @@ INSERT INTO rooms (hotel_id, name, capacity, price_per_night, total_rooms, image
 (3, 'Standard Twin', 2, 5200.00, 25, 'https://images.unsplash.com/photo-1590381105924-c72589b9ef3f?w=1200&q=80&auto=format&fit=crop');
 
 INSERT INTO flights (airline, flight_no, origin, destination, depart_at, arrive_at, seat_class, price, seats_total, seats_available) VALUES
-('Thai Airways', 'TG640', 'BKK', 'NRT', '2026-10-10 08:00:00', '2026-10-10 16:10:00', 'economy', 18500.00, 180, 176),
+('Thai Airways', 'TG640', 'BKK', 'NRT', '2026-10-10 08:00:00', '2026-10-10 16:10:00', 'economy', 18500.00, 180, 178),
 ('Thai Airways', 'TG640', 'BKK', 'NRT', '2026-10-10 08:00:00', '2026-10-10 16:10:00', 'business', 52000.00, 30, 30),
-('AirAsia X', 'XJ600', 'DMK', 'NRT', '2026-10-10 23:45:00', '2026-10-11 07:50:00', 'economy', 8900.00, 377, 377),
+('AirAsia X', 'XJ600', 'DMK', 'NRT', '2026-10-10 23:45:00', '2026-10-11 07:50:00', 'economy', 8900.00, 377, 376),
 ('Thai Airways', 'TG622', 'BKK', 'KIX', '2026-11-02 23:30:00', '2026-11-03 07:00:00', 'economy', 16900.00, 250, 248);
 
 INSERT INTO events (name, category, city, country, venue, description, start_date, end_date, image_url) VALUES
@@ -61,9 +63,9 @@ INSERT INTO events (name, category, city, country, venue, description, start_dat
  'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=1200&q=80&auto=format&fit=crop');
 
 INSERT INTO event_tickets (event_id, name, price, quantity_total, quantity_sold) VALUES
-(1, 'ผู้ใหญ่ (18+)', 2300.00, 1000, 3),
-(1, 'เด็ก (4-11)', 1400.00, 1000, 1),
-(2, '1-Day Studio Pass', 2200.00, 1000, 2),
+(1, 'ผู้ใหญ่ (18+)', 2300.00, 1000, 5),
+(1, 'เด็ก (4-11)', 1400.00, 1000, 2),
+(2, '1-Day Studio Pass', 2200.00, 1000, 5),
 (3, 'General Admission', 3500.00, 5000, 0),
 (3, 'VIP', 8900.00, 300, 0);
 

@@ -10,6 +10,7 @@ const GROUPS = [
     links: [
       { href: "/admin/hotels", icon: "🏨", label: "โรงแรม" },
       { href: "/admin/rooms", icon: "🛏️", label: "ห้องพัก" },
+      { href: "/admin/availability", icon: "🗓️", label: "ห้องว่าง" },
     ],
   },
   {
@@ -22,7 +23,13 @@ const GROUPS = [
     ],
   },
   { title: "ลูกค้า", links: [{ href: "/admin/customers", icon: "👥", label: "ลูกค้า" }] },
-  { title: "ระบบ", links: [{ href: "/admin/admins", icon: "🔐", label: "ผู้ดูแลระบบ" }] },
+  {
+    title: "ระบบ",
+    links: [
+      { href: "/admin/admins", icon: "🔐", label: "ผู้ดูแลระบบ" },
+      { href: "/admin/audit", icon: "📜", label: "บันทึกการแก้ไข" },
+    ],
+  },
 ];
 
 export default function Nav() {

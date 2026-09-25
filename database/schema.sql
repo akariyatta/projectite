@@ -20,12 +20,42 @@ CREATE TABLE IF NOT EXISTS users (
 
 -- ผู้ดูแลระบบ (ล็อกอินหลังบ้านเท่านั้น — แยกจากลูกค้าโดยสิ้นเชิง)
 CREATE TABLE IF NOT EXISTS admins (
-  id            INT AUTO_INCREMENT PRIMARY KEY,
-  name          VARCHAR(100) NOT NULL,
-  email         VARCHAR(150) NOT NULL UNIQUE,
-  password_hash VARCHAR(255) NOT NULL,           -- bcrypt
-  status        ENUM('active','banned') NOT NULL DEFAULT 'active',
-  created_at    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+  id                   INT AUTO_INCREMENT PRIMARY KEY,
+  name                 VARCHAR(100) NOT NULL,
+  email                VARCHAR(150) NOT NULL UNIQUE,
+  password_hash        VARCHAR(255) NOT NULL,     -- bcrypt
+  status               ENUM('active','banned') NOT NULL DEFAULT 'active',
+  must_change_password TINYINT(1) NOT NULL DEFAULT 1, -- 1 = ต้องตั้งรหัสใหม่ก่อนใช้งาน (รหัสชั่วคราว)
+  session_version      INT NOT NULL DEFAULT 1,     -- เพิ่มทุกครั้งที่เปลี่ยนรหัส → session เก่าทุกเครื่องหลุด
+  password_changed_at  DATETIME,
+  created_at           DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+-- ประวัติการล็อกอินหลังบ้าน (ใช้กันการเดารหัส: ผิด 5 ครั้งใน 15 นาที → ล็อก 15 นาที)
+CREATE TABLE IF NOT EXISTS admin_login_attempts (
+  id         INT AUTO_INCREMENT PRIMARY KEY,
+  email      VARCHAR(150) NOT NULL,
+  ip         VARCHAR(64) NOT NULL,
+  success    TINYINT(1) NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  INDEX (email, created_at),
+  INDEX (ip, created_at)
+);
+
+-- บันทึกการแก้ไข: แอดมินคนไหน ทำอะไร กับข้อมูลไหน เมื่อไร
+CREATE TABLE IF NOT EXISTS audit_logs (
+  id         INT AUTO_INCREMENT PRIMARY KEY,
+  admin_id   INT,
+  admin_name VARCHAR(100) NOT NULL,
+  action     VARCHAR(30) NOT NULL,                -- create / update / delete / status / login / password
+  entity     VARCHAR(50) NOT NULL,                -- ชื่อตาราง เช่น hotels, bookings
+  entity_id  INT,
+  summary    VARCHAR(255) NOT NULL,
+  changes    LONGTEXT,                            -- JSON: { คอลัมน์: [ค่าเดิม, ค่าใหม่] }
+  ip         VARCHAR(64),
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  INDEX (entity, entity_id),
+  INDEX (created_at)
 );
 
 -- โรงแรม
