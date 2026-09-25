@@ -9,7 +9,10 @@ export const metadata = { title: "เข้าสู่ระบบ · Hotel Tra
 
 export default async function LoginPage({ searchParams }) {
   if (await getAdmin()) redirect("/admin");
-  const { error } = await searchParams;
+  const { error, locked } = await searchParams;
+  const message = locked
+    ? `ใส่รหัสผิดหลายครั้งเกินไป — ลองใหม่ได้ในอีก ${Number(locked) || 15} นาที`
+    : error && "อีเมลหรือรหัสผ่านไม่ถูกต้อง";
 
   return (
     <div className={`adm-root adm-login ${adminFonts}`}>
@@ -23,7 +26,7 @@ export default async function LoginPage({ searchParams }) {
           <div>
             <h1>ยินดีต้อนรับกลับ</h1>
             <p>เข้าสู่ระบบเพื่อจัดการโรงแรม เที่ยวบิน และการจอง</p>
-            <Alert error={error && "อีเมลหรือรหัสผ่านไม่ถูกต้อง"} />
+            <Alert error={message} />
           </div>
           <label className="adm-field">
             <span>อีเมล</span>

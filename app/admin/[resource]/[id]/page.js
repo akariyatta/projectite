@@ -65,8 +65,12 @@ async function Input({ field, value, isNew }) {
   }
 }
 
-function hintFor(field, isNew) {
-  if (field.type === "password") return isNew ? `อย่างน้อย ${field.minLength ?? 8} ตัวอักษร` : "เว้นว่างไว้ถ้าไม่ต้องการเปลี่ยนรหัสผ่าน";
+function hintFor(field, isNew, resource) {
+  if (field.type === "password") {
+    const rule = "อย่างน้อย 8 ตัว มีทั้งตัวอักษรและตัวเลข";
+    const temp = resource === "admins" ? " · รหัสที่ตั้งให้คนอื่นเป็นรหัสชั่วคราว เจ้าตัวต้องเปลี่ยนตอนล็อกอินครั้งถัดไป" : "";
+    return (isNew ? rule : `เว้นว่างถ้าไม่เปลี่ยน · ${rule}`) + temp;
+  }
   if (field.type === "image") return "อัปโหลดจากเครื่อง หรือวางลิงก์รูปจากเว็บ";
   return field.hint;
 }
@@ -109,7 +113,7 @@ export default async function ResourceForm({ params }) {
                 name={f.name}
                 label={f.label}
                 required={f.required || (f.type === "password" && isNew)}
-                hint={hintFor(f, isNew)}
+                hint={hintFor(f, isNew, resource)}
                 suffix={f.suffix}
                 wide={WIDE.includes(f.type)}
               >

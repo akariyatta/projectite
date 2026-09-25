@@ -23,7 +23,7 @@ export default async function AdminLayout({ children }) {
         <Nav />
         <div className="adm-side-foot">
           <div className="adm-avatar">{admin.name.charAt(0).toUpperCase()}</div>
-          <Link href={`/admin/admins/${admin.id}`} className="adm-who" title="แก้ไขบัญชี / เปลี่ยนรหัสผ่าน">
+          <Link href="/account/password" className="adm-who" title="เปลี่ยนรหัสผ่าน">
             <div>{admin.name}</div>
             <div className="adm-email">{admin.email}</div>
           </Link>
