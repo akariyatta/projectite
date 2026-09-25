@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const GROUPS = [
-  { title: "ภาพรวม", links: [{ href: "/admin", icon: "◆", label: "แดชบอร์ด" }, { href: "/admin/bookings", icon: "🧾", label: "การจอง" }] },
+  { title: "ภาพรวม", links: [{ href: "/admin", icon: "◆", label: "แดชบอร์ด" }, { href: "/admin/bookings", icon: "🧾", label: "การจอง" }, { href: "/admin/reports", icon: "📈", label: "รายงานยอดขาย" }] },
   {
     title: "ที่พัก",
     links: [

@@ -36,6 +36,7 @@ components/admin/AdminForm.js   ฟอร์มที่ตรวจข้อม
 components/admin/Toast.js       แจ้งเตือน "สำเร็จ" / error (ส่งผ่าน ?ok= / ?error= ใน URL)
 app/login               หน้าเข้าสู่ระบบ
 app/admin               หน้าหลังบ้านทั้งหมด
+app/admin/reports       รายงานยอดขายรายเดือน + ดาวน์โหลด CSV (ข้อมูลจาก lib/reports.js)
 components/admin        สไตล์และคอมโพเนนต์ของหลังบ้าน (class ขึ้นต้น adm- ไม่ชนกับหน้าบ้าน)
 ```
 

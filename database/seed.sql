@@ -79,6 +79,45 @@ INSERT INTO payments (booking_id, method, amount, status, paid_at) VALUES
 (2, 'credit_card', 25000.00, 'pending', NULL),
 (3, 'bank_transfer', 4200.00, 'refunded', '2026-09-24 09:10:00');
 
+-- การจองย้อนหลังตลอดปี (ให้หน้ารายงานยอดขายมีข้อมูลให้ดู) — booking id 4–12
+INSERT INTO bookings (booking_code, user_id, status, total_amount, created_at) VALUES
+('BK20260115004', 2, 'completed', 8400.00,  '2026-01-15 11:20:00'),
+('BK20260210005', 1, 'completed', 13500.00, '2026-02-10 19:05:00'),
+('BK20260305006', 2, 'completed', 12500.00, '2026-03-05 08:45:00'),
+('BK20260418007', 1, 'completed', 40900.00, '2026-04-18 21:30:00'),
+('BK20260512008', 2, 'cancelled', 5200.00,  '2026-05-12 13:10:00'),
+('BK20260620009', 1, 'completed', 6600.00,  '2026-06-20 10:00:00'),
+('BK20260708010', 2, 'completed', 27300.00, '2026-07-08 16:25:00'),
+('BK20260822011', 1, 'confirmed', 24100.00, '2026-08-22 09:40:00'),
+('BK20251205012', 1, 'completed', 8400.00,  '2025-12-05 15:00:00');
+
+INSERT INTO booking_items (booking_id, item_type, item_id, description, start_date, end_date, quantity, unit_price, subtotal) VALUES
+(4,  'room',   3, 'Centara Grand — Superior King', '2026-02-01', '2026-02-03', 1, 4200.00, 8400.00),
+(5,  'flight', 3, 'XJ600 DMK → NRT (economy)', '2026-03-01', NULL, 1, 8900.00, 8900.00),
+(5,  'ticket', 1, 'Tokyo Disneyland — ผู้ใหญ่ (18+)', '2026-03-02', NULL, 2, 2300.00, 4600.00),
+(6,  'room',   4, 'Centara Grand — Club Suite', '2026-03-20', '2026-03-21', 1, 12500.00, 12500.00),
+(7,  'flight', 1, 'TG640 BKK → NRT (economy)', '2026-05-01', NULL, 1, 18500.00, 18500.00),
+(7,  'room',   2, 'Hilton Tokyo Bay — Family Room', '2026-05-01', '2026-05-03', 1, 9800.00, 19600.00),
+(7,  'ticket', 2, 'Tokyo Disneyland — เด็ก (4-11)', '2026-05-02', NULL, 2, 1400.00, 2800.00),
+(8,  'room',   5, 'Hotel Universal Port — Standard Twin', '2026-06-01', '2026-06-02', 1, 5200.00, 5200.00),
+(9,  'ticket', 3, 'Universal Studios Japan — 1-Day Studio Pass', '2026-07-01', NULL, 3, 2200.00, 6600.00),
+(10, 'flight', 4, 'TG622 BKK → KIX (economy)', '2026-08-01', NULL, 1, 16900.00, 16900.00),
+(10, 'room',   5, 'Hotel Universal Port — Standard Twin', '2026-08-02', '2026-08-04', 1, 5200.00, 10400.00),
+(11, 'room',   1, 'Hilton Tokyo Bay — Deluxe Double', '2026-10-20', '2026-10-23', 1, 6500.00, 19500.00),
+(11, 'ticket', 1, 'Tokyo Disneyland — ผู้ใหญ่ (18+)', '2026-10-21', NULL, 2, 2300.00, 4600.00),
+(12, 'room',   3, 'Centara Grand — Superior King', '2025-12-24', '2025-12-26', 1, 4200.00, 8400.00);
+
+INSERT INTO payments (booking_id, method, amount, status, paid_at) VALUES
+(4,  'promptpay',     8400.00,  'paid',     '2026-01-15 11:25:00'),
+(5,  'credit_card',   13500.00, 'paid',     '2026-02-10 19:08:00'),
+(6,  'bank_transfer', 12500.00, 'paid',     '2026-03-05 09:30:00'),
+(7,  'credit_card',   40900.00, 'paid',     '2026-04-18 21:33:00'),
+(8,  'promptpay',     5200.00,  'refunded', '2026-05-12 13:15:00'),
+(9,  'paypal',        6600.00,  'paid',     '2026-06-20 10:02:00'),
+(10, 'credit_card',   27300.00, 'paid',     '2026-07-08 16:30:00'),
+(11, 'promptpay',     24100.00, 'paid',     '2026-08-22 09:45:00'),
+(12, 'bank_transfer', 8400.00,  'paid',     '2025-12-05 15:20:00');
+
 INSERT INTO trip_plans (user_id, title, destination, start_date, end_date, budget, prompt, plan) VALUES
 (1, 'โตเกียว 3 วัน 2 คืน', 'Tokyo', '2026-10-10', '2026-10-12', 50000.00,
  'อยากไป Disneyland และกินอาหารญี่ปุ่นอร่อยๆ',
