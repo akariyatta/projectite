@@ -35,9 +35,12 @@
 .adm-side {
   width: 264px;
   flex-shrink: 0;
-  position: sticky;
+  /* fixed, not sticky: the front site's globals.css sets overflow-x on html/body, which breaks sticky */
+  position: fixed;
   top: 0;
-  height: 100vh;
+  bottom: 0;
+  left: 0;
+  z-index: 10;
   display: flex;
   flex-direction: column;
   background: linear-gradient(180deg, var(--navy) 0%, #0d1a31 100%);
@@ -132,7 +135,7 @@
 .adm-logout:hover { background: rgba(214, 182, 122, 0.12); }
 
 /* ---------- Main ---------- */
-.adm-main { flex: 1; min-width: 0; padding: 36px 40px 60px; }
+.adm-main { flex: 1; min-width: 0; padding: 36px 40px 60px; margin-left: 264px; }
 .adm-stack > * + * { margin-top: 24px; }
 
 .adm-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; }
@@ -361,7 +364,7 @@ textarea.adm-input { resize: vertical; }
   .adm-nav a { white-space: nowrap; border-left: 0; border-bottom: 2px solid transparent; }
   .adm-nav a.active { border-bottom-color: var(--gold-2); }
   .adm-side-foot { margin-top: 12px; }
-  .adm-main { padding: 24px 16px 48px; }
+  .adm-main { padding: 24px 16px 48px; margin-left: 0; }
   .adm-head h1 { font-size: 26px; }
   .adm-form-grid { grid-template-columns: 1fr; }
   .adm-dl { grid-template-columns: 110px 1fr; }
