@@ -2,9 +2,7 @@ import Link from "next/link";
 import { Badge, PageHead } from "@/components/admin/ui";
 import { requireAdmin } from "@/lib/auth";
 import { query } from "@/lib/db";
-import { baht, label } from "@/lib/format";
-
-const THAI_MONTHS = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
+import { baht, label, THAI_MONTHS } from "@/lib/format";
 
 export default async function Dashboard() {
   const admin = await requireAdmin();
