@@ -125,7 +125,10 @@ INSERT INTO payments (booking_id, method, amount, status, paid_at) VALUES
 (11, 'promptpay',     24100.00, 'paid',     '2026-08-22 09:45:00'),
 (12, 'bank_transfer', 8400.00,  'paid',     '2025-12-05 15:20:00');
 
-INSERT INTO trip_plans (user_id, title, destination, start_date, end_date, budget, prompt, plan) VALUES
-(1, 'โตเกียว 3 วัน 2 คืน', 'Tokyo', '2026-10-10', '2026-10-12', 50000.00,
+INSERT INTO trip_plans (user_id, title, destination, start_date, end_date, travelers, budget, source, style, prompt, plan) VALUES
+(1, 'โตเกียว 3 วัน 2 คืน', 'Tokyo', '2026-10-10', '2026-10-12', 1, 50000.00, 'ai', 'balanced',
  'อยากไป Disneyland และกินอาหารญี่ปุ่นอร่อยๆ',
- '{"days":[{"day":1,"items":["ถึง NRT","เช็คอิน Hilton Tokyo Bay"]},{"day":2,"items":["Tokyo Disneyland ทั้งวัน"]},{"day":3,"items":["ตลาดปลาสึกิจิ","บินกลับ"]}]}');
+ '{"summary":"บินตรงถึงนาริตะ พักใกล้ดิสนีย์ 2 คืน เที่ยวสวนสนุกเต็มวัน แล้วปิดทริปด้วยตลาดปลา","estimated_cost":33800,"days":[{"day":1,"date":"2026-10-10","title":"เดินทางถึงโตเกียว","items":[{"time":"08:00","type":"flight","ref_id":1,"title":"TG640 BKK → NRT (economy)","note":"ถึง 16:10","cost":18500},{"time":"18:00","type":"hotel","ref_id":1,"title":"Hilton Tokyo Bay — Deluxe Double","note":"2 คืน","cost":13000}]},{"day":2,"date":"2026-10-11","title":"Tokyo Disneyland ทั้งวัน","items":[{"time":"08:30","type":"event","ref_id":1,"title":"Tokyo Disneyland — ผู้ใหญ่ (18+)","note":"ไปถึงก่อนเปิด 30 นาที","cost":2300}]},{"day":3,"date":"2026-10-12","title":"ตลาดปลาและเดินทางกลับ","items":[{"time":"07:00","type":"food","ref_id":null,"title":"อาหารเช้าที่ตลาดปลาสึกิจิ","note":"","cost":0},{"time":"11:00","type":"hotel","ref_id":null,"title":"เช็คเอาท์","note":"","cost":0}]}]}'),
+(2, 'โอซาก้าครอบครัว 2 วัน', 'Osaka', '2026-11-02', '2026-11-04', 2, 40000.00, 'customer', NULL,
+ 'พาลูกไป Universal Studios',
+ '{"summary":"ลูกค้าจัดเอง: USJ หนึ่งวันเต็ม พักติดสวนสนุก","estimated_cost":43400,"days":[{"day":1,"date":"2026-11-03","title":"ถึงโอซาก้า","items":[{"time":"07:00","type":"flight","ref_id":4,"title":"TG622 BKK → KIX (economy)","note":"","cost":33800},{"time":"14:00","type":"hotel","ref_id":5,"title":"Hotel Universal Port — Standard Twin","note":"1 คืน","cost":5200}]},{"day":2,"date":"2026-11-04","title":"Universal Studios Japan","items":[{"time":"09:00","type":"event","ref_id":3,"title":"Universal Studios Japan — 1-Day Studio Pass","note":"","cost":4400}]}]}');

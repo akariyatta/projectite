@@ -52,4 +52,14 @@ components/admin        สไตล์และคอมโพเนนต์�
 - รหัสผ่านลูกค้าเก็บเป็น bcrypt ใน `users.password_hash` (ใช้แพ็กเกจ `bcryptjs`)
 - `image_url` เป็นได้ทั้งลิงก์เว็บ (`https://…`) หรือไฟล์ที่อัปโหลด (`/uploads/…`) — ใช้ใน `<img src>` ได้เหมือนกัน
   - ไฟล์ที่อัปโหลดอยู่ในโฟลเดอร์ `uploads/` ของเครื่องที่อัปโหลด (ไม่ขึ้น GitHub เหมือนฐานข้อมูล)
-- แผนเที่ยว AI บันทึกลง `trip_plans` (`prompt` = คำขอ, `plan` = ผลลัพธ์จาก AI)
+- แผนเที่ยวบันทึกลง `trip_plans` — `source` = `customer` (วางเอง) หรือ `ai` (เลือกจาก 3 แผนที่ระบบเสนอ)
+  - `plan` เป็น JSON: `{ summary, estimated_cost, days: [{ day, date, title, items: [{ time, type, ref_id, title, note, cost }] }] }`
+  - `type`: flight / hotel / event / activity / food / transport — `ref_id` ชี้ไปที่ flights.id / rooms.id / event_tickets.id
+  - หน้าบ้านเรียกตัวจัดแผนได้จาก `suggestPlans()` ใน `lib/planner.js`
+
+## AI วางแผนเที่ยว (Claude)
+
+- ใส่ `ANTHROPIC_API_KEY=...` ใน `.env.local` แล้วรัน `npm run dev` ใหม่ → ปุ่ม "ให้ AI เสนอ 3 แผน" จะใช้ Claude
+- ถ้าไม่มี key (หรือ AI ล่ม) ระบบจัดแผนเองจากเที่ยวบิน/โรงแรม/ตั๋วที่มีขาย — หน้าเว็บใช้ได้เสมอ
+- AI เลือกได้เฉพาะของที่มีขายจริง และระบบคำนวณราคาเองจากฐานข้อมูล (ไม่เชื่อราคาจาก AI)
+- ฐานข้อมูลเดิม (สร้างก่อน 26 ก.ย. 2026): Import `database/migrations/001-trip-plans-v2.sql` หนึ่งครั้ง (`prompt` = คำขอ, `plan` = ผลลัพธ์จาก AI)
