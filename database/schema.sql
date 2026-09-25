@@ -135,17 +135,24 @@ CREATE TABLE IF NOT EXISTS payments (
   FOREIGN KEY (booking_id) REFERENCES bookings(id) ON DELETE CASCADE
 );
 
--- แผนเที่ยวที่ AI สร้างให้ลูกค้า
+-- แผนเที่ยว — ลูกค้าวางเอง (source = customer) หรือ AI เสนอให้เลือก (source = ai)
 CREATE TABLE IF NOT EXISTS trip_plans (
   id          INT AUTO_INCREMENT PRIMARY KEY,
   user_id     INT NOT NULL,
   title       VARCHAR(150) NOT NULL,
-  destination VARCHAR(150) NOT NULL,
+  destination VARCHAR(150) NOT NULL,                -- ชื่อเมือง ตรงกับ hotels.city / events.city
   start_date  DATE,
   end_date    DATE,
+  travelers   TINYINT NOT NULL DEFAULT 1,
   budget      DECIMAL(12,2),
-  prompt      TEXT,                                 -- สิ่งที่ลูกค้าพิมพ์ขอ AI
-  plan        LONGTEXT,                             -- ผลลัพธ์จาก AI (JSON หรือข้อความ)
+  source      ENUM('customer','ai') NOT NULL DEFAULT 'customer',
+  style       ENUM('budget','balanced','premium'),  -- แผนแบบไหนที่ AI เสนอ (ถ้ามาจาก AI)
+  prompt      TEXT,                                 -- สิ่งที่ลูกค้าพิมพ์ขอ
+  plan        LONGTEXT,                             -- JSON: { summary, estimated_cost, days: [{ day, date, title, items: [...] }] }
   created_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at  DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
+-- โครง plan.days[].items[]:
+--   { time: "08:00", type: "flight|hotel|event|activity|food|transport",
+--     ref_id: flights.id | rooms.id | event_tickets.id | null, title, note, cost }
