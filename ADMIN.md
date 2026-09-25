@@ -5,6 +5,7 @@
 1. เปิด **XAMPP** แล้วกด Start ที่ **MySQL** (และ Apache ถ้าจะใช้ phpMyAdmin)
 2. เปิด `http://localhost/phpmyadmin` → **Import** → เลือก `database/schema.sql` → Go
 3. **Import** อีกครั้ง → `database/seed.sql` (ข้อมูลตัวอย่าง + บัญชีแอดมิน)
+   - Import ซ้ำได้ แต่จะล้างข้อมูลทุกตารางแล้วใส่ข้อมูลตัวอย่างใหม่ (ใช้ตอนอยากรีเซ็ต)
 4. คัดลอก `.env.example` เป็น `.env.local` แล้วตั้ง `SESSION_SECRET` เป็นข้อความสุ่มยาวๆ
 5. `npm install` แล้ว `npm run dev`
 6. เข้า `http://localhost:3000/login`
