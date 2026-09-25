@@ -602,3 +602,46 @@ textarea.adm-input { resize: vertical; }
   .adm-chart-x { font-size: 10px; }
   .adm-chart-value { display: none; }
 }
+/* ---------- Image upload ---------- */
+.adm-image { display: grid; gap: 10px; }
+.adm-drop {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: 220px;
+  border: 2px dashed #d9d1c1;
+  border-radius: 12px;
+  background: #fbf9f4;
+  overflow: hidden;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+.adm-drop:hover, .adm-drop:focus-visible { border-color: var(--gold); outline: none; }
+.adm-drop.is-over { border-color: var(--gold); background: var(--gold-soft); }
+.adm-drop.has-image { border-style: solid; border-color: var(--line); }
+.adm-drop img { width: 100%; height: 100%; object-fit: cover; }
+.adm-drop.has-image::after {
+  content: "คลิกหรือลากรูปใหม่มาวางเพื่อเปลี่ยน";
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 8px;
+  text-align: center;
+  font-size: 12.5px;
+  color: #fff;
+  background: linear-gradient(transparent, rgba(13, 26, 49, 0.75));
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.adm-drop.has-image:hover::after, .adm-drop.is-over::after { opacity: 1; }
+.adm-drop-empty { display: grid; gap: 4px; justify-items: center; text-align: center; color: var(--muted); font-size: 13px; padding: 16px; }
+.adm-drop-empty strong { color: var(--navy); font-size: 14px; }
+.adm-drop-icon { font-size: 30px; }
+.adm-drop-busy {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.8);
+  font-weight: 600;
+  color: var(--navy);
+}

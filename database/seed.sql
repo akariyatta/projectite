@@ -30,17 +30,21 @@ INSERT INTO users (name, email, password_hash, phone) VALUES
 ('สมชาย ใจดี', 'somchai@example.com', '$2b$10$6CdzKJ4xlfUrb18aSrn1ze8SrxAPrwEeYkDQ3y0/MRjLmpwYJqe.a', '0812345678'),
 ('Suda Kaewmanee', 'suda@example.com', '$2b$10$6CdzKJ4xlfUrb18aSrn1ze8SrxAPrwEeYkDQ3y0/MRjLmpwYJqe.a', '0898765432');
 
-INSERT INTO hotels (name, city, country, address, description, star_rating) VALUES
-('Hilton Tokyo Bay', 'Tokyo', 'Japan', '1-8 Maihama, Urayasu', 'ใกล้ Tokyo Disneyland มีรถรับส่งฟรี', 4),
-('Centara Grand', 'Bangkok', 'Thailand', 'Ratchadamri Rd', 'ใจกลางเมือง ใกล้ห้างสรรพสินค้า', 5),
-('Hotel Universal Port', 'Osaka', 'Japan', '1-1-111 Sakurajima', 'เดินไป Universal Studios Japan ได้', 4);
+-- รูปตัวอย่างจาก Unsplash (ใช้ฟรีตาม Unsplash License — https://unsplash.com/license)
+INSERT INTO hotels (name, city, country, address, description, star_rating, image_url) VALUES
+('Hilton Tokyo Bay', 'Tokyo', 'Japan', '1-8 Maihama, Urayasu', 'ใกล้ Tokyo Disneyland มีรถรับส่งฟรี', 4,
+ 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=1200&q=80&auto=format&fit=crop'),
+('Centara Grand', 'Bangkok', 'Thailand', 'Ratchadamri Rd', 'ใจกลางเมือง ใกล้ห้างสรรพสินค้า', 5,
+ 'https://images.unsplash.com/photo-1561501900-3701fa6a0864?w=1200&q=80&auto=format&fit=crop'),
+('Hotel Universal Port', 'Osaka', 'Japan', '1-1-111 Sakurajima', 'เดินไป Universal Studios Japan ได้', 4,
+ 'https://images.unsplash.com/photo-1621293954908-907159247fc8?w=1200&q=80&auto=format&fit=crop');
 
-INSERT INTO rooms (hotel_id, name, capacity, price_per_night, total_rooms) VALUES
-(1, 'Deluxe Double', 2, 6500.00, 20),
-(1, 'Family Room', 4, 9800.00, 10),
-(2, 'Superior King', 2, 4200.00, 30),
-(2, 'Club Suite', 3, 12500.00, 8),
-(3, 'Standard Twin', 2, 5200.00, 25);
+INSERT INTO rooms (hotel_id, name, capacity, price_per_night, total_rooms, image_url) VALUES
+(1, 'Deluxe Double', 2, 6500.00, 20, 'https://images.unsplash.com/photo-1618773928121-c32242e63f39?w=1200&q=80&auto=format&fit=crop'),
+(1, 'Family Room', 4, 9800.00, 10, 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?w=1200&q=80&auto=format&fit=crop'),
+(2, 'Superior King', 2, 4200.00, 30, 'https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=1200&q=80&auto=format&fit=crop'),
+(2, 'Club Suite', 3, 12500.00, 8, 'https://images.unsplash.com/photo-1590490360182-c33d57733427?w=1200&q=80&auto=format&fit=crop'),
+(3, 'Standard Twin', 2, 5200.00, 25, 'https://images.unsplash.com/photo-1590381105924-c72589b9ef3f?w=1200&q=80&auto=format&fit=crop');
 
 INSERT INTO flights (airline, flight_no, origin, destination, depart_at, arrive_at, seat_class, price, seats_total, seats_available) VALUES
 ('Thai Airways', 'TG640', 'BKK', 'NRT', '2026-10-10 08:00:00', '2026-10-10 16:10:00', 'economy', 18500.00, 180, 176),
@@ -48,10 +52,13 @@ INSERT INTO flights (airline, flight_no, origin, destination, depart_at, arrive_
 ('AirAsia X', 'XJ600', 'DMK', 'NRT', '2026-10-10 23:45:00', '2026-10-11 07:50:00', 'economy', 8900.00, 377, 377),
 ('Thai Airways', 'TG622', 'BKK', 'KIX', '2026-11-02 23:30:00', '2026-11-03 07:00:00', 'economy', 16900.00, 250, 248);
 
-INSERT INTO events (name, category, city, country, venue, description, start_date, end_date) VALUES
-('Tokyo Disneyland', 'theme_park', 'Tokyo', 'Japan', 'Urayasu, Chiba', 'บัตรเข้าสวนสนุก 1 วัน', '2026-01-01', '2026-12-31'),
-('Universal Studios Japan', 'theme_park', 'Osaka', 'Japan', 'Konohana-ku', 'บัตรเข้าสวนสนุก 1 วัน', '2026-01-01', '2026-12-31'),
-('Songkran Music Festival', 'concert', 'Bangkok', 'Thailand', 'Rajamangala Stadium', 'เทศกาลดนตรีสงกรานต์', '2027-04-12', '2027-04-14');
+INSERT INTO events (name, category, city, country, venue, description, start_date, end_date, image_url) VALUES
+('Tokyo Disneyland', 'theme_park', 'Tokyo', 'Japan', 'Urayasu, Chiba', 'บัตรเข้าสวนสนุก 1 วัน', '2026-01-01', '2026-12-31',
+ 'https://images.unsplash.com/photo-1590144662036-33bf0ebd2c7f?w=1200&q=80&auto=format&fit=crop'),
+('Universal Studios Japan', 'theme_park', 'Osaka', 'Japan', 'Konohana-ku', 'บัตรเข้าสวนสนุก 1 วัน', '2026-01-01', '2026-12-31',
+ 'https://images.unsplash.com/photo-1565699752279-a3e990a2ab3d?w=1200&q=80&auto=format&fit=crop'),
+('Songkran Music Festival', 'concert', 'Bangkok', 'Thailand', 'Rajamangala Stadium', 'เทศกาลดนตรีสงกรานต์', '2027-04-12', '2027-04-14',
+ 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=1200&q=80&auto=format&fit=crop');
 
 INSERT INTO event_tickets (event_id, name, price, quantity_total, quantity_sold) VALUES
 (1, 'ผู้ใหญ่ (18+)', 2300.00, 1000, 3),
