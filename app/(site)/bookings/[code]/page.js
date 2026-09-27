@@ -3,7 +3,8 @@ import { notFound } from "next/navigation";
 import ConfirmButton from "@/components/admin/ConfirmButton";
 import SubmitButton from "@/components/admin/SubmitButton";
 import ClearCartAfterOrder from "@/components/site/ClearCartAfterOrder";
-import { addDaysStr, todayStr } from "@/lib/catalog";
+import { addDaysStr, itemImages, todayStr } from "@/lib/catalog";
+import { sized } from "@/lib/images";
 import { requireCustomer } from "@/lib/customer";
 import { query } from "@/lib/db";
 import { baht, label } from "@/lib/format";
@@ -22,6 +23,7 @@ export default async function BookingPage({ params }) {
     query("SELECT * FROM payments WHERE booking_id = ? ORDER BY id DESC", [booking.id]),
   ]);
   const payment = payments[0];
+  const images = await itemImages(items);
   const firstDay = items.map((i) => i.start_date).filter(Boolean).sort()[0];
   const canCancel = ["pending", "confirmed"].includes(booking.status) && (!firstDay || firstDay > addDaysStr(todayStr(), 0));
   const awaitingPayment = booking.status === "pending" && payment?.status === "pending";
@@ -45,10 +47,14 @@ export default async function BookingPage({ params }) {
           <h2>รายการที่จอง</h2>
           {items.map((it) => (
             <div key={it.id} className="st-line">
-              <div>
-                <strong>{ICON[it.item_type]} {it.description}</strong>
-                <div className="st-muted" style={{ fontSize: 13 }}>
-                  {thaiDate(it.start_date)}{it.end_date ? ` – ${thaiDate(it.end_date)}` : ""}
+              <div className="st-line-main">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={sized(images.get(`${it.item_type}:${it.item_id}`), 200)} alt="" className="st-line-img" />
+                <div>
+                  <strong>{ICON[it.item_type]} {it.description}</strong>
+                  <div className="st-muted" style={{ fontSize: 13 }}>
+                    {thaiDate(it.start_date)}{it.end_date ? ` – ${thaiDate(it.end_date)}` : ""}
+                  </div>
                 </div>
               </div>
               <span className="st-muted">× {it.quantity}</span>

@@ -198,7 +198,10 @@
 .st-price small { font-family: var(--font-body), sans-serif; font-size: 12px; color: var(--muted); font-weight: 400; }
 
 /* flights */
-.st-flight { grid-template-columns: 1fr auto; }
+.st-flight { grid-template-columns: 170px 1fr auto; }
+.st-flight-img { position: relative; background-size: cover; background-position: center; min-height: 150px; }
+.st-flight-img::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(13, 26, 49, 0.65), transparent 55%); }
+.st-flight-img span { position: absolute; left: 12px; bottom: 10px; z-index: 1; color: #fff; font-family: var(--font-display), Georgia, serif; font-size: 17px; }
 .st-flight .st-result-body { padding: 18px 20px; }
 .st-route { display: grid; grid-template-columns: auto 1fr auto; gap: 16px; align-items: center; }
 .st-route strong { font-family: var(--font-display), Georgia, serif; font-size: 24px; color: var(--navy); }
@@ -227,6 +230,8 @@
 .st-sticky { position: sticky; top: 88px; }
 .st-line { display: grid; grid-template-columns: 1fr auto auto; gap: 12px; align-items: center; padding: 14px 0; border-top: 1px solid #ede7da; }
 .st-line:first-child { border-top: 0; }
+.st-line-main { display: flex; gap: 14px; align-items: center; min-width: 0; }
+.st-line-img { width: 72px; height: 56px; flex-shrink: 0; object-fit: cover; border-radius: 8px; background: var(--gold-soft); }
 .st-total { display: flex; justify-content: space-between; align-items: baseline; padding-top: 14px; margin-top: 8px; border-top: 2px solid var(--navy); }
 .st-methods { display: grid; gap: 10px; }
 .st-method { display: flex; gap: 12px; align-items: center; padding: 12px 14px; border: 1px solid var(--line); border-radius: 8px; cursor: pointer; }
@@ -244,7 +249,9 @@
     repeating-linear-gradient(45deg, var(--navy) 0 3px, #fff 3px 9px);
 }
 .st-bookings { display: grid; gap: 12px; }
-.st-booking-row { display: grid; grid-template-columns: 1fr auto auto; gap: 16px; align-items: center; padding: 16px 20px; background: #fff; border: 1px solid var(--line); border-radius: 10px; }
+.st-booking-row { display: grid; grid-template-columns: 96px 1fr auto auto; gap: 16px; align-items: center; padding: 12px 20px 12px 12px; background: #fff; border: 1px solid var(--line); border-radius: 10px; }
+.st-booking-img { width: 96px; height: 68px; object-fit: cover; border-radius: 8px; background: var(--gold-soft); }
+.st-plan-cover { display: block; height: 140px; margin: 0 -24px 4px; background-size: cover; background-position: center; }
 .st-booking-row:hover { border-color: #d6c7a3; }
 
 /* auth */
@@ -288,18 +295,20 @@
   .st-nav { display: none; }
   .st-header-inner { gap: 10px; padding: 12px 16px; }
   .st-brand { font-size: 17px; white-space: nowrap; margin-right: auto; }
-  .st-user > span { display: none; } /* hide the name, keep "การจองของฉัน" + ออก */
+  .st-user > span, .st-hide-sm { display: none; } /* keep only "การจองของฉัน" + ออก */
   .st-actions { gap: 6px; }
   .st-cart { padding: 6px 8px; }
   .st-wrap { padding: 0 16px; }
-  .st-result { grid-template-columns: 1fr; }
+  .st-result, .st-flight { grid-template-columns: 1fr; }
+  .st-flight-img { min-height: 120px; }
   .st-result-img { height: 180px; }
   .st-result-body { padding: 0 18px; }
   .st-result-side { border-left: 0; border-top: 1px solid #ede7da; justify-items: start; text-align: left; }
   .st-item { grid-template-columns: 1fr; }
   .st-item img, .st-item .st-thumb { width: 100%; height: 160px; }
   .st-add { justify-content: flex-start; }
-  .st-booking-row { grid-template-columns: 1fr; }
+  .st-booking-row { grid-template-columns: 1fr; padding: 12px; }
+  .st-booking-img { width: 100%; height: 140px; }
   .st-pagehead h1 { font-size: 24px; }
   .st-root .adm-toast { top: auto; bottom: 16px; left: 16px; right: 16px; max-width: none; }
 }

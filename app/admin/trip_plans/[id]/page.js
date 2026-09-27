@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import TripPlanner from "@/components/admin/TripPlanner";
 import { PageHead } from "@/components/admin/ui";
+import TripPlanner from "@/components/planner/TripPlanner";
+import { saveTripPlan, suggestTripPlans } from "@/lib/actions";
 import { requireAdmin } from "@/lib/auth";
 import { query } from "@/lib/db";
 import { aiEnabled, loadCatalog } from "@/lib/planner";
+import { planForEditor } from "@/lib/trips";
 
 export default async function TripPlanPage({ params }) {
   await requireAdmin();
@@ -15,22 +17,7 @@ export default async function TripPlanPage({ params }) {
   if (!isNew) {
     const [row] = await query("SELECT * FROM trip_plans WHERE id = ?", [Number(id)]);
     if (!row) notFound();
-    let parsed = { summary: "", days: [] };
-    try { parsed = { ...parsed, ...JSON.parse(row.plan ?? "{}") }; } catch {}
-    // Old plans stored items as plain strings — turn them into activity items
-    parsed.days = (parsed.days ?? []).map((d, i) => ({
-      day: i + 1,
-      date: d.date ?? "",
-      title: d.title ?? "",
-      items: (d.items ?? []).map((it) => (typeof it === "string" ? { time: "", type: "activity", ref_id: null, title: it, note: "", cost: 0 } : it)),
-    }));
-    plan = {
-      ...row,
-      start_date: row.start_date?.slice(0, 10) ?? "",
-      end_date: row.end_date?.slice(0, 10) ?? "",
-      budget: row.budget === null ? "" : Number(row.budget),
-      plan: parsed,
-    };
+    plan = planForEditor(row);
   }
 
   const [customers, catalog] = await Promise.all([
@@ -46,7 +33,15 @@ export default async function TripPlanPage({ params }) {
         title={isNew ? "สร้างแผนเที่ยว" : plan.title}
         subtitle={isNew ? "กรอกข้อมูลการเดินทาง แล้วเลือกว่าจะวางเอง หรือให้ AI เสนอ 3 แผน" : null}
       />
-      <TripPlanner id={isNew ? null : Number(id)} initial={plan} customers={customers} catalog={catalog} aiEnabled={aiEnabled()} />
+      <TripPlanner
+        id={isNew ? null : Number(id)}
+        initial={plan}
+        customers={customers}
+        catalog={catalog}
+        aiEnabled={aiEnabled()}
+        suggestAction={suggestTripPlans}
+        saveAction={saveTripPlan}
+      />
     </div>
   );
 }

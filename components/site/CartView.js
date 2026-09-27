@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { baht } from "@/lib/format";
+import { sized, TYPE_PHOTOS } from "@/lib/images";
 import { placeOrder } from "@/lib/site-actions";
 import { cartKey, useCart } from "./cart";
 
@@ -56,12 +57,16 @@ export default function CartView({ signedIn }) {
           const key = cartKey(it);
           return (
             <div key={key} className="st-line">
-              <div style={{ minWidth: 0 }}>
+              <div className="st-line-main">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={sized(it.image ?? TYPE_PHOTOS[it.type === "room" ? "hotel" : it.type === "ticket" ? "event" : "flight"], 200)} alt="" className="st-line-img" />
+                <div style={{ minWidth: 0 }}>
                 <strong>{ICON[it.type]} {it.label}</strong>
                 <div className="st-muted" style={{ fontSize: 13 }}>
                   {it.sub}{it.date ? ` · วันที่ ${new Date(`${it.date}T00:00:00`).toLocaleDateString("th-TH-u-ca-gregory", { day: "numeric", month: "short", year: "numeric" })}` : ""}
                 </div>
                 <div className="st-muted" style={{ fontSize: 13 }}>{baht(it.unitPrice)} / {UNIT[it.type]}</div>
+                </div>
               </div>
               <select className="st-input" style={{ width: "auto" }} value={it.qty} onChange={(e) => cart.setQty(key, Number(e.target.value))} aria-label="จำนวน">
                 {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => <option key={n} value={n}>{n} {UNIT[it.type]}</option>)}

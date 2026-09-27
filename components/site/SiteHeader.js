@@ -13,11 +13,13 @@ export default async function SiteHeader() {
           <Link href="/hotels">ที่พัก</Link>
           <Link href="/flights">เที่ยวบิน</Link>
           <Link href="/events">งาน & สวนสนุก</Link>
+          <Link href="/plans/new">✨ วางแผนเที่ยว</Link>
         </nav>
         <div className="st-actions">
           <CartBadge />
           {user ? (
             <div className="st-user">
+              <Link href="/plans" className="st-hide-sm">แผนของฉัน</Link>
               <Link href="/bookings">การจองของฉัน</Link>
               <span className="st-muted" style={{ color: "#c9c2ac" }}>{user.name}</span>
               <form action={signoutCustomer}>
