@@ -42,6 +42,17 @@ CREATE TABLE IF NOT EXISTS admin_login_attempts (
   INDEX (ip, created_at)
 );
 
+-- ประวัติการล็อกอินของลูกค้าหน้าเว็บ (กันการเดารหัสแบบเดียวกับหลังบ้าน)
+CREATE TABLE IF NOT EXISTS customer_login_attempts (
+  id         INT AUTO_INCREMENT PRIMARY KEY,
+  email      VARCHAR(150) NOT NULL,
+  ip         VARCHAR(64) NOT NULL,
+  success    TINYINT(1) NOT NULL,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  INDEX (email, created_at),
+  INDEX (ip, created_at)
+);
+
 -- บันทึกการแก้ไข: แอดมินคนไหน ทำอะไร กับข้อมูลไหน เมื่อไร
 CREATE TABLE IF NOT EXISTS audit_logs (
   id         INT AUTO_INCREMENT PRIMARY KEY,

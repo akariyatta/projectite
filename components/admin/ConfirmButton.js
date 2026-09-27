@@ -5,7 +5,7 @@ import { useFormStatus } from "react-dom";
 import ConfirmDialog from "./ConfirmDialog";
 
 /** Delete button: asks in a themed dialog, then submits the surrounding <form>. */
-export default function ConfirmButton({ title = "ยืนยันการลบ?", message = "ข้อมูลที่ลบแล้วจะกู้คืนไม่ได้", className, children }) {
+export default function ConfirmButton({ title = "ยืนยันการลบ?", message = "ข้อมูลที่ลบแล้วจะกู้คืนไม่ได้", confirmLabel = "ลบ", className, children }) {
   const [open, setOpen] = useState(false);
   const btn = useRef(null);
   const { pending } = useFormStatus();
@@ -20,7 +20,7 @@ export default function ConfirmButton({ title = "ยืนยันการล�
         danger
         title={title}
         message={message}
-        confirmLabel="ลบ"
+        confirmLabel={confirmLabel}
         onCancel={() => setOpen(false)}
         onConfirm={() => { setOpen(false); btn.current.form.requestSubmit(); }}
       />

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import {
   Search,
   MapPin,
@@ -37,10 +38,13 @@ function formatThaiDate(date) {
   };
 }
 
-function addDays(date, n) {
-  const d = new Date(date);
+// Dates are kept as "YYYY-MM-DD" strings (what <input type="date"> and the URL use)
+const toISO = (d) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+const fromISO = (s) => new Date(`${s}T00:00:00`);
+function addDays(iso, n) {
+  const d = fromISO(iso);
   d.setDate(d.getDate() + n);
-  return d;
+  return toISO(d);
 }
 
 function GuestPicker({ rooms, setRooms }) {
@@ -146,48 +150,54 @@ function GuestPicker({ rooms, setRooms }) {
   );
 }
 
-function DateField({ label, date }) {
-  const { top, bottom } = formatThaiDate(date);
+// Clicking the field opens the browser's date picker; the Thai-formatted date stays on top.
+function DateField({ label, value, min, onChange }) {
+  const { top, bottom } = formatThaiDate(fromISO(value));
+  const ref = useRef(null);
   return (
-    <div className="dateField">
+    <label className="dateField" onClick={() => ref.current?.showPicker?.()}>
       <Calendar size={18} className="goldIcon" />
       <div>
         <span className="dateLabel">{label}</span>
         <span className="dateTop">{top}</span>
         <span className="dateBottom">{bottom}</span>
       </div>
-    </div>
+      <input
+        ref={ref}
+        type="date"
+        className="dateNative"
+        value={value}
+        min={min}
+        onChange={(e) => e.target.value && onChange(e.target.value)}
+        aria-label={label}
+      />
+    </label>
   );
 }
 
-export default function HotelPlaneBooking() {
+export default function HotelPlaneBooking({ cities = [], destinations = [] }) {
+  const router = useRouter();
+  const today = toISO(new Date());
   const [tab, setTab] = useState("hotel");
   const [destination, setDestination] = useState("");
   const [origin, setOrigin] = useState("");
   const [flightTo, setFlightTo] = useState("");
-  const [checkIn] = useState(new Date(2026, 9, 4));
-  const [checkOut] = useState(addDays(new Date(2026, 9, 4), 1));
+  const [checkIn, setCheckIn] = useState(addDays(today, 7));
+  const [checkOut, setCheckOut] = useState(addDays(today, 8));
   const [rooms, setRooms] = useState([{ adults: 2, children: 0 }]);
 
-  const destinations = ["กรุงเทพ", "เชียงใหม่", "ภูเก็ต", "พัทยา", "หัวหิน / ชะอำ"];
+  const guests = rooms.reduce((s, r) => s + r.adults + r.children, 0);
+  const setIn = (v) => {
+    setCheckIn(v);
+    if (checkOut <= v) setCheckOut(addDays(v, 1));
+  };
+  const go = (path, params) => router.push(`${path}?${new URLSearchParams(Object.entries(params).filter(([, v]) => v !== "" && v != null))}`);
+  const searchHotels = () => go("/hotels", { city: destination, check_in: checkIn, check_out: checkOut, guests, rooms: rooms.length });
+  const searchFlights = () => go("/flights", { from: origin, to: flightTo, date: checkIn, passengers: guests });
+  const searchCombo = () => go("/hotels", { city: destination, from: origin, check_in: checkIn, check_out: checkOut, guests, rooms: rooms.length });
 
   return (
     <div className="page">
-      <header className="header">
-        <div className="headerInner">
-          <div className="brand">
-            <span className="brandStar">✦</span>
-            <span className="brandName">Hotel Travel</span>
-          </div>
-          <nav className="nav">
-            <a href="#">คู่มือท่องเที่ยว</a>
-            <a href="#">รีวิวทริปเที่ยว</a>
-            <a href="#">สิทธิพิเศษสมาชิก</a>
-          </nav>
-          <button className="loginBtn">เข้าสู่ระบบ</button>
-        </div>
-      </header>
-
       <section className="hero">
         <div className="heroInner">
           <p className="heroStars">✦ ✦ ✦</p>
@@ -225,21 +235,21 @@ export default function HotelPlaneBooking() {
                     list="destination-list"
                   />
                   <datalist id="destination-list">
-                    {destinations.map((d) => (
-                      <option key={d} value={d} />
+                    {cities.map((c) => (
+                      <option key={c.city} value={c.city}>{c.th}</option>
                     ))}
                   </datalist>
                 </div>
 
                 <div className="row">
                   <div className="dateRow">
-                    <DateField label="เช็คอิน" date={checkIn} />
-                    <DateField label="เช็คเอาท์" date={checkOut} />
+                    <DateField label="เช็คอิน" value={checkIn} min={today} onChange={setIn} />
+                    <DateField label="เช็คเอาท์" value={checkOut} min={addDays(checkIn, 1)} onChange={setCheckOut} />
                   </div>
                   <GuestPicker rooms={rooms} setRooms={setRooms} />
                 </div>
 
-                <button className="searchBtn">
+                <button className="searchBtn" onClick={searchHotels}>
                   <Search size={18} />
                   ค้นหาที่พัก
                 </button>
@@ -254,7 +264,8 @@ export default function HotelPlaneBooking() {
                     <input
                       value={origin}
                       onChange={(e) => setOrigin(e.target.value)}
-                      placeholder="ต้นทาง"
+                      placeholder="ต้นทาง เช่น Bangkok หรือ BKK"
+                      list="destination-list"
                     />
                   </div>
                   <button
@@ -273,20 +284,21 @@ export default function HotelPlaneBooking() {
                     <input
                       value={flightTo}
                       onChange={(e) => setFlightTo(e.target.value)}
-                      placeholder="ปลายทาง"
+                      placeholder="ปลายทาง เช่น Tokyo"
+                      list="destination-list"
                     />
                   </div>
                 </div>
 
                 <div className="row">
                   <div className="dateRow">
-                    <DateField label="ขาไป" date={checkIn} />
-                    <DateField label="ขากลับ" date={checkOut} />
+                    <DateField label="ขาไป" value={checkIn} min={today} onChange={setIn} />
+                    <DateField label="ขากลับ" value={checkOut} min={addDays(checkIn, 1)} onChange={setCheckOut} />
                   </div>
                   <GuestPicker rooms={rooms} setRooms={setRooms} />
                 </div>
 
-                <button className="searchBtn">
+                <button className="searchBtn" onClick={searchFlights}>
                   <Search size={18} />
                   ค้นหาเที่ยวบิน
                 </button>
@@ -301,7 +313,8 @@ export default function HotelPlaneBooking() {
                     <input
                       value={origin}
                       onChange={(e) => setOrigin(e.target.value)}
-                      placeholder="บินจาก"
+                      placeholder="บินจาก เช่น Bangkok"
+                      list="destination-list"
                     />
                   </div>
                   <div className="searchInput flexOne">
@@ -310,19 +323,20 @@ export default function HotelPlaneBooking() {
                       value={destination}
                       onChange={(e) => setDestination(e.target.value)}
                       placeholder="จุดหมายปลายทาง"
+                      list="destination-list"
                     />
                   </div>
                 </div>
 
                 <div className="row">
                   <div className="dateRow">
-                    <DateField label="เดินทาง" date={checkIn} />
-                    <DateField label="กลับ" date={checkOut} />
+                    <DateField label="เดินทาง" value={checkIn} min={today} onChange={setIn} />
+                    <DateField label="กลับ" value={checkOut} min={addDays(checkIn, 1)} onChange={setCheckOut} />
                   </div>
                   <GuestPicker rooms={rooms} setRooms={setRooms} />
                 </div>
 
-                <button className="searchBtn">
+                <button className="searchBtn" onClick={searchCombo}>
                   <Search size={18} />
                   ค้นหาตั๋วเครื่องบิน + ที่พัก
                 </button>
@@ -336,29 +350,31 @@ export default function HotelPlaneBooking() {
           <div className="destinationsRow">
             {destinations.map((d) => (
               <button
-                key={d}
+                key={d.city}
                 className="destCard"
-                onClick={() => {
-                  setDestination(d);
-                  setTab("hotel");
-                }}
+                style={d.image_url ? { backgroundImage: `url(${d.image_url.replace(/([?&])w=\d+/, "$1w=480")})` } : undefined}
+                onClick={() => go("/hotels", { city: d.city, check_in: checkIn, check_out: checkOut, guests, rooms: rooms.length })}
               >
                 <span className="destCardOverlay" />
-                <span className="destCardLabel">{d}</span>
+                <span className="destCardLabel">
+                  {d.th}
+                  <small className="destCardSub">{d.hotels} ที่พัก{d.events ? ` · ${d.events} งาน` : ""}</small>
+                </span>
               </button>
             ))}
           </div>
         </div>
       </section>
 
-      <footer className="footer">HOTEL TRAVEL · BOOK WITH CONFIDENCE</footer>
 
-      <style jsx>{`
+      {/* global: DateField and GuestPicker are separate components, which scoped styled-jsx can't reach.
+          Only mounted on the home page, so the class names don't leak elsewhere. */}
+      <style jsx global>{`
         .page {
           min-height: 100vh;
           background: #faf7f0;
           color: #1b2430;
-          font-family: "Noto Sans Thai", "Segoe UI", sans-serif;
+          font-family: var(--font-body), "Segoe UI", sans-serif;
         }
         .header {
           border-bottom: 1px solid #e3dcc9;
@@ -433,8 +449,8 @@ export default function HotelPlaneBooking() {
           letter-spacing: 0.3em;
           color: #c9973b;
         }
-        .heroTitle {
-          font-family: Georgia, "Times New Roman", serif;
+        .hero .heroTitle {
+          font-family: var(--font-display), var(--font-serif-th), Georgia, serif;
           font-size: 32px;
           color: #fff;
           margin: 0;
@@ -445,6 +461,8 @@ export default function HotelPlaneBooking() {
           color: #c9c2ac;
         }
         .searchSection {
+          position: relative; /* sit above the hero, which is position: relative too */
+          z-index: 1;
           max-width: 960px;
           margin: -80px auto 0;
           padding: 0 24px 64px;
@@ -578,6 +596,33 @@ export default function HotelPlaneBooking() {
             border-radius: 0 6px 6px 0;
             border-top: 1px solid #e3dcc9;
           }
+        }
+        .dateField {
+          position: relative;
+          cursor: pointer;
+        }
+        .dateField:hover {
+          border-color: #c9973b;
+        }
+        .dateNative {
+          position: absolute;
+          left: 16px;
+          bottom: 0;
+          width: 1px;
+          height: 1px;
+          opacity: 0;
+          pointer-events: none;
+        }
+        .destCard {
+          background-size: cover;
+          background-position: center;
+        }
+        .destCardSub {
+          display: block;
+          margin-top: 2px;
+          font-family: var(--font-body), sans-serif;
+          font-size: 11.5px;
+          color: #e4c588;
         }
         .dateLabel {
           display: block;
@@ -784,7 +829,7 @@ export default function HotelPlaneBooking() {
         .destCardOverlay {
           position: absolute;
           inset: 0;
-          background: linear-gradient(to bottom right, #1e3a5f, #14213d);
+          background: linear-gradient(to top, rgba(20, 33, 61, 0.92), rgba(20, 33, 61, 0.25));
           opacity: 0.9;
         }
         .destCard:hover .destCardOverlay {
