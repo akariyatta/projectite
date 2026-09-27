@@ -1,6 +1,7 @@
 import AddToCart from "@/components/site/AddToCart";
 import { addDaysStr, normalizeCity, popularCities, searchFlights, todayStr } from "@/lib/catalog";
 import { baht } from "@/lib/format";
+import { cityPhoto, sized } from "@/lib/images";
 
 export const metadata = { title: "ค้นหาเที่ยวบิน · Hotel Travel" };
 
@@ -49,6 +50,9 @@ export default async function Flights({ searchParams }) {
         <div className="st-results">
           {flights.map((f) => (
             <div key={f.id} className="st-result st-flight">
+              <div className="st-flight-img" style={{ backgroundImage: `url(${sized(cityPhoto(f.toCity), 500)})` }}>
+                <span>{f.toCity}</span>
+              </div>
               <div className="st-result-body" style={{ gap: 12 }}>
                 <div className="st-row" style={{ justifyContent: "space-between" }}>
                   <strong>{f.airline} · {f.flight_no}</strong>
@@ -75,7 +79,7 @@ export default async function Flights({ searchParams }) {
                     type: "flight", ref: f.id, flight_id: f.id,
                     label: `${f.airline} ${f.flight_no} ${f.origin} → ${f.destination}`,
                     sub: `${thaiDate(f.depart_at.slice(0, 10))} ${f.depart_at.slice(11, 16)} · ${CLASS_TH[f.seat_class]}`,
-                    unitPrice: f.price,
+                    unitPrice: f.price, image: cityPhoto(f.toCity),
                   }}
                 />
               </div>
