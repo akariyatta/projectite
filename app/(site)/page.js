@@ -13,7 +13,7 @@ export default async function Home() {
       <HomeSearch cities={cities} destinations={cities} />
 
       {events.length > 0 && (
-        <section className="st-wrap" style={{ marginTop: -16 }}>
+        <section className="st-wrap" style={{ marginTop: -16, maxWidth: 960 }}>
           <div className="st-row" style={{ justifyContent: "space-between", marginBottom: 16 }}>
             <h2 style={{ fontSize: 20 }}>งานและสวนสนุกยอดนิยม</h2>
             <Link href="/events" className="st-link">ดูทั้งหมด →</Link>

@@ -2,9 +2,16 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import AddToCart from "@/components/site/AddToCart";
 import { CITY_TH, getHotel, stayDates } from "@/lib/catalog";
+import { query } from "@/lib/db";
 import { baht } from "@/lib/format";
 
 const thaiDate = (d) => new Date(`${d}T00:00:00`).toLocaleDateString("th-TH-u-ca-gregory", { weekday: "short", day: "numeric", month: "short" });
+
+export async function generateMetadata({ params }) {
+  const { id } = await params;
+  const [h] = await query("SELECT name, city FROM hotels WHERE id = ? AND is_active = 1", [Number(id)]);
+  return { title: h ? `${h.name}, ${h.city} · Hotel Travel` : "ไม่พบที่พัก · Hotel Travel" };
+}
 
 export default async function HotelPage({ params, searchParams }) {
   const { id } = await params;
