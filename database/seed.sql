@@ -20,6 +20,7 @@ TRUNCATE TABLE hotels;
 TRUNCATE TABLE users;
 TRUNCATE TABLE admins;
 TRUNCATE TABLE admin_login_attempts;
+TRUNCATE TABLE customer_login_attempts;
 TRUNCATE TABLE audit_logs;
 SET FOREIGN_KEY_CHECKS = 1;
 
