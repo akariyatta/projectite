@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import ConfirmButton from "@/components/admin/ConfirmButton";
 import SubmitButton from "@/components/admin/SubmitButton";
 import ClearCartAfterOrder from "@/components/site/ClearCartAfterOrder";
+import Countdown from "@/components/site/Countdown";
 import { addDaysStr, itemImages, todayStr } from "@/lib/catalog";
 import { sized } from "@/lib/images";
 import { requireCustomer } from "@/lib/customer";
@@ -78,21 +79,41 @@ export default async function BookingPage({ params }) {
 
           {awaitingPayment && (
             <>
-              {payment.method === "promptpay" ? (
-                <div style={{ textAlign: "center" }}>
-                  <div className="st-qr" aria-label="QR PromptPay (ตัวอย่าง)" />
-                  <p className="st-muted" style={{ fontSize: 13 }}>สแกนเพื่อชำระ {baht(payment.amount)}</p>
-                </div>
+              {booking.expires_at && <Countdown until={booking.expires_at} />}
+              {payment.provider === "stripe" ? (
+                <>
+                  <p className="st-muted" style={{ fontSize: 13 }}>
+                    ชำระ {baht(payment.amount)} ผ่าน{payment.method === "promptpay" ? " PromptPay QR" : "บัตรเครดิต/เดบิต"} บนหน้าชำระเงินที่ปลอดภัยของ Stripe
+                  </p>
+                  <form action={payBooking.bind(null, booking.booking_code)}>
+                    <SubmitButton className="st-btn" pendingText="กำลังเปิดหน้าชำระเงิน…" style={{ width: "100%", padding: 13 }}>
+                      🔒 ไปหน้าชำระเงิน
+                    </SubmitButton>
+                  </form>
+                  <p className="st-test-note">ระบบไม่เก็บข้อมูลบัตรของคุณ — Stripe เป็นผู้ดูแลการชำระเงิน</p>
+                </>
               ) : (
-                <p className="st-muted" style={{ fontSize: 13 }}>ชำระด้วยบัตรเครดิต/เดบิต จำนวน {baht(payment.amount)}</p>
+                <>
+                  {payment.method === "promptpay" ? (
+                    <div style={{ textAlign: "center" }}>
+                      <div className="st-qr" aria-label="QR PromptPay (ตัวอย่าง)" />
+                      <p className="st-muted" style={{ fontSize: 13 }}>สแกนเพื่อชำระ {baht(payment.amount)}</p>
+                    </div>
+                  ) : (
+                    <p className="st-muted" style={{ fontSize: 13 }}>ชำระด้วยบัตรเครดิต/เดบิต จำนวน {baht(payment.amount)}</p>
+                  )}
+                  <form action={payBooking.bind(null, booking.booking_code)}>
+                    <SubmitButton className="st-btn" pendingText="กำลังชำระเงิน…" style={{ width: "100%", padding: 13 }}>
+                      {payment.method === "promptpay" ? "ฉันโอนเงินแล้ว" : "ชำระเงิน"}
+                    </SubmitButton>
+                  </form>
+                  <p className="st-test-note">🔒 โหมดทดสอบ — กดแล้วถือว่าชำระสำเร็จ ไม่มีการตัดเงินจริง</p>
+                </>
               )}
-              <form action={payBooking.bind(null, booking.booking_code)}>
-                <SubmitButton className="st-btn" pendingText="กำลังชำระเงิน…" style={{ width: "100%", padding: 13 }}>
-                  {payment.method === "promptpay" ? "ฉันโอนเงินแล้ว" : "ชำระเงิน"}
-                </SubmitButton>
-              </form>
-              <p className="st-test-note">🔒 โหมดทดสอบ — กดแล้วถือว่าชำระสำเร็จ ไม่มีการตัดเงินจริง</p>
             </>
+          )}
+          {booking.status === "cancelled" && booking.note?.includes("หมดเวลาชำระเงิน") && (
+            <div className="st-alert st-alert-error">⏳ ยกเลิกอัตโนมัติเพราะไม่ได้ชำระเงินภายในเวลาที่กำหนด</div>
           )}
 
           {booking.status === "confirmed" && <div className="st-alert st-alert-info">✓ การจองได้รับการยืนยันแล้ว แสดงรหัส {booking.booking_code} ตอนเช็คอิน/ขึ้นเครื่อง</div>}

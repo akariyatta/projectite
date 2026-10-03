@@ -34,6 +34,7 @@ export default function AuthForm({ mode, next }) {
       {field("password", "รหัสผ่าน", { type: "password", required: true, autoComplete: register ? "new-password" : "current-password", defaultValue: undefined })}
       {register && field("confirm", "ยืนยันรหัสผ่าน", { type: "password", required: true, autoComplete: "new-password", defaultValue: undefined })}
       {register && <small className="st-muted">รหัสผ่านอย่างน้อย 8 ตัว มีทั้งตัวอักษรและตัวเลข</small>}
+      {!register && <Link href="/forgot" className="st-link" style={{ fontSize: 13, justifySelf: "end", marginTop: -6 }}>ลืมรหัสผ่าน?</Link>}
       <button className="st-btn" style={{ padding: 13 }} disabled={pending}>
         {pending ? "กำลังดำเนินการ…" : register ? "สมัครสมาชิก" : "เข้าสู่ระบบ"}
       </button>

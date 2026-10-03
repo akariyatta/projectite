@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS users (
   password_hash VARCHAR(255) NOT NULL,           -- bcrypt (ใช้ bcryptjs)
   phone         VARCHAR(30),
   status        ENUM('active','banned') NOT NULL DEFAULT 'active',
+  session_version INT NOT NULL DEFAULT 1,          -- เปลี่ยนรหัสแล้ว session เก่าทุกเครื่องหลุด
   created_at    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -145,6 +146,7 @@ CREATE TABLE IF NOT EXISTS bookings (
   status       ENUM('pending','confirmed','cancelled','completed') NOT NULL DEFAULT 'pending',
   total_amount DECIMAL(12,2) NOT NULL DEFAULT 0,
   note         TEXT,
+  expires_at   DATETIME,                           -- ยังไม่จ่ายเงินเกินเวลานี้ → ยกเลิกอัตโนมัติ
   created_at   DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
   FOREIGN KEY (user_id) REFERENCES users(id)
 );
@@ -169,6 +171,8 @@ CREATE TABLE IF NOT EXISTS payments (
   id         INT AUTO_INCREMENT PRIMARY KEY,
   booking_id INT NOT NULL,
   method     ENUM('credit_card','promptpay','bank_transfer','paypal') NOT NULL,
+  provider     VARCHAR(20) NOT NULL DEFAULT 'simulated',  -- simulated (โหมดทดสอบ) / stripe
+  provider_ref VARCHAR(255),                               -- Stripe checkout session / payment intent
   amount     DECIMAL(12,2) NOT NULL,
   status     ENUM('pending','paid','failed','refunded') NOT NULL DEFAULT 'pending',
   paid_at    DATETIME,
@@ -197,3 +201,26 @@ CREATE TABLE IF NOT EXISTS trip_plans (
 -- โครง plan.days[].items[]:
 --   { time: "08:00", type: "flight|hotel|event|activity|food|transport",
 --     ref_id: flights.id | rooms.id | event_tickets.id | null, title, note, cost }
+
+-- ลืมรหัสผ่าน (ลูกค้า): เก็บเฉพาะ sha256 ของ token
+CREATE TABLE IF NOT EXISTS password_resets (
+  id         INT AUTO_INCREMENT PRIMARY KEY,
+  user_id    INT NOT NULL,
+  token_hash CHAR(64) NOT NULL UNIQUE,
+  expires_at DATETIME NOT NULL,
+  used_at    DATETIME,
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
+
+-- อีเมลทุกฉบับที่ระบบส่ง (ถ้ายังไม่ตั้ง SMTP จะเก็บไว้ที่นี่ให้เปิดดูในหลังบ้าน)
+CREATE TABLE IF NOT EXISTS email_outbox (
+  id         INT AUTO_INCREMENT PRIMARY KEY,
+  to_email   VARCHAR(150) NOT NULL,
+  subject    VARCHAR(255) NOT NULL,
+  body_html  MEDIUMTEXT NOT NULL,
+  status     ENUM('sent','logged','failed') NOT NULL,
+  error      VARCHAR(500),
+  created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  INDEX (created_at)
+);

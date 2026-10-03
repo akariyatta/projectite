@@ -6,11 +6,13 @@ import Nav from "@/components/admin/Nav";
 import Toast from "@/components/admin/Toast";
 import { logout } from "@/lib/actions";
 import { requireAdmin } from "@/lib/auth";
+import { expireStaleBookings } from "@/lib/booking-flow";
 
 export const metadata = { title: "Admin · Hotel Travel" };
 
 export default async function AdminLayout({ children }) {
   const admin = await requireAdmin();
+  await expireStaleBookings().catch((e) => console.error("expire sweep:", e));
 
   return (
     <div className={`adm-root ${adminFonts}`}>
