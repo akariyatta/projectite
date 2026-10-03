@@ -21,7 +21,7 @@ export default async function SiteHeader() {
             <div className="st-user">
               <Link href="/plans" className="st-hide-sm">แผนของฉัน</Link>
               <Link href="/bookings">การจองของฉัน</Link>
-              <span className="st-muted" style={{ color: "#c9c2ac" }}>{user.name}</span>
+              <Link href="/profile" className="st-hide-sm" style={{ color: "#c9c2ac" }} title="บัญชีของฉัน">👤 {user.name}</Link>
               <form action={signoutCustomer}>
                 <button className="st-login" style={{ padding: "5px 10px" }}>ออก</button>
               </form>
