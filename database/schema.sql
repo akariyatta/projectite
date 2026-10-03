@@ -116,7 +116,7 @@ CREATE TABLE IF NOT EXISTS flights (
 CREATE TABLE IF NOT EXISTS events (
   id          INT AUTO_INCREMENT PRIMARY KEY,
   name        VARCHAR(150) NOT NULL,
-  category    ENUM('theme_park','concert','exhibition','sport','other') NOT NULL DEFAULT 'theme_park',
+  category    ENUM('theme_park','attraction','concert','exhibition','sport','other') NOT NULL DEFAULT 'theme_park',
   city        VARCHAR(100) NOT NULL,
   country     VARCHAR(100) NOT NULL,
   venue       VARCHAR(150),

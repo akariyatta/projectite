@@ -40,12 +40,23 @@
 .st-link:hover { text-decoration: underline; }
 
 /* ---------- Header / footer ---------- */
-.st-header { background: var(--navy); border-bottom: 1px solid #0d1830; position: sticky; top: 0; z-index: 50; }
+.st-header {
+  background: rgba(20, 33, 61, 0.92);
+  backdrop-filter: saturate(160%) blur(10px);
+  -webkit-backdrop-filter: saturate(160%) blur(10px);
+  border-bottom: 1px solid rgba(201, 151, 59, 0.25);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
 .st-header-inner { max-width: 1152px; margin: 0 auto; padding: 14px 24px; display: flex; align-items: center; gap: 24px; }
 .st-brand { display: flex; align-items: center; gap: 8px; color: #fff; font-family: var(--font-display), Georgia, serif; font-size: 20px; }
 .st-brand span { color: var(--gold); }
 .st-nav { display: flex; gap: 24px; font-size: 14px; color: #c9c2ac; flex: 1; }
+.st-nav a { position: relative; padding: 4px 0; transition: color 0.15s; }
+.st-nav a::after { content: ""; position: absolute; left: 0; right: 0; bottom: -2px; height: 2px; border-radius: 2px; background: var(--gold); transform: scaleX(0); transition: transform 0.2s; }
 .st-nav a:hover, .st-nav a.active { color: #fff; }
+.st-nav a:hover::after { transform: scaleX(1); }
 .st-actions { display: flex; align-items: center; gap: 12px; }
 .st-cart {
   position: relative;
@@ -83,23 +94,32 @@
 .st-login:hover { background: var(--navy-2); }
 .st-user { color: #fff; font-size: 14px; display: flex; align-items: center; gap: 10px; }
 .st-user a { color: var(--gold-2); }
-.st-footer {
-  margin-top: 64px;
-  border-top: 1px solid var(--line);
-  background: #fff;
-  padding: 28px 24px;
-  text-align: center;
-  font-size: 12px;
-  letter-spacing: 0.05em;
-  color: #a69b84;
-}
-.st-footer a { color: var(--gold); }
+.st-footer { margin-top: 80px; background: var(--navy); color: #a9b0c0; font-size: 14px; }
+.st-footer-grid { max-width: 1152px; margin: 0 auto; padding: 56px 24px 40px; display: grid; grid-template-columns: 1.4fr repeat(3, 1fr); gap: 32px; }
+.st-footer .st-brand { margin-bottom: 12px; }
+.st-footer p { line-height: 1.7; max-width: 300px; }
+.st-footer h4 { color: #fff; font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 14px; font-weight: 600; }
+.st-footer ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.st-footer a { color: #c9c2ac; transition: color 0.15s; }
+.st-footer a:hover { color: var(--gold-2); }
+.st-footer-bottom { border-top: 1px solid rgba(255, 255, 255, 0.08); padding: 18px 24px; text-align: center; font-size: 12px; letter-spacing: 0.05em; color: #7d869a; }
 
 /* ---------- Page head ---------- */
-.st-pagehead { background: var(--navy); color: #c9c2ac; padding: 36px 0 72px; }
-.st-pagehead h1 { color: #fff; font-size: 30px; margin-top: 4px; }
+.st-pagehead {
+  position: relative;
+  color: #c9c2ac;
+  padding: 44px 0 84px;
+  background:
+    radial-gradient(circle at 88% 0%, rgba(201, 151, 59, 0.28), transparent 42%),
+    radial-gradient(circle at 0% 100%, rgba(58, 96, 150, 0.45), transparent 50%),
+    linear-gradient(135deg, #14213d 0%, #1b2f52 100%);
+  background-size: cover;
+  background-position: center;
+}
+.st-pagehead.has-photo { background-image: linear-gradient(100deg, rgba(13, 24, 46, 0.94) 25%, rgba(13, 24, 46, 0.5)), var(--photo); }
+.st-pagehead h1 { color: #fff; font-size: 34px; margin-top: 4px; }
 .st-eyebrow { font-size: 12px; letter-spacing: 0.3em; color: var(--gold); text-transform: uppercase; }
-.st-pull { margin-top: -48px; }
+.st-pull { position: relative; z-index: 1; margin-top: -48px; } /* sits above the (position: relative) page head */
 
 /* ---------- Cards, forms, buttons ---------- */
 .st-card {
@@ -141,8 +161,8 @@
   cursor: pointer;
   white-space: nowrap;
 }
-.st-btn { background: linear-gradient(to right, #c9973b, #b9822b); color: #fff; }
-.st-btn:hover { filter: brightness(1.05); }
+.st-btn { background: linear-gradient(to right, #c9973b, #b9822b); color: #fff; box-shadow: 0 8px 18px -10px rgba(185, 130, 43, 0.9); transition: transform 0.15s, filter 0.15s, box-shadow 0.15s; }
+.st-btn:hover { filter: brightness(1.06); transform: translateY(-1px); box-shadow: 0 12px 22px -10px rgba(185, 130, 43, 0.9); }
 .st-btn-navy { background: var(--navy); color: #fff; }
 .st-btn-navy:hover { background: var(--navy-2); }
 .st-btn-ghost { background: #fff; color: var(--navy); border-color: var(--line); }
@@ -150,7 +170,8 @@
 .st-root button:disabled { opacity: 0.55; cursor: not-allowed; }
 .st-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
 .st-pills { display: flex; flex-wrap: wrap; gap: 8px; }
-.st-pill { padding: 6px 14px; border-radius: 999px; border: 1px solid var(--line); background: #fff; font-size: 13px; color: var(--muted); }
+.st-pill { padding: 6px 14px; border-radius: 999px; border: 1px solid var(--line); background: #fff; font-size: 13px; color: var(--muted); transition: border-color 0.15s, color 0.15s; }
+.st-pill:hover { border-color: var(--gold); color: var(--navy); }
 .st-pill.active { background: var(--navy); border-color: var(--navy); color: #fff; }
 .st-alert { padding: 12px 16px; border-radius: 8px; font-size: 14px; }
 .st-alert-error { background: #fbeceb; border: 1px solid #efc9c5; color: #8e2d27; }
@@ -176,9 +197,9 @@
   border: 1px solid var(--line);
   border-radius: 10px;
   overflow: hidden;
-  transition: box-shadow 0.15s, border-color 0.15s;
+  transition: box-shadow 0.2s, border-color 0.2s, transform 0.2s;
 }
-.st-result:hover { border-color: #d6c7a3; box-shadow: 0 16px 40px -24px rgba(20, 33, 61, 0.4); }
+.st-result:hover { border-color: #d6c7a3; box-shadow: 0 22px 44px -26px rgba(20, 33, 61, 0.5); transform: translateY(-2px); }
 .st-result.is-off { opacity: 0.6; }
 .st-result-img { width: 100%; height: 100%; min-height: 180px; object-fit: cover; background: linear-gradient(135deg, var(--navy-2), var(--navy)); }
 .st-result-body { padding: 18px 0; display: grid; gap: 6px; align-content: start; min-width: 0; }
@@ -264,6 +285,41 @@
 .st-auth .st-card { display: grid; gap: 16px; padding: 32px; border-top: 4px solid var(--gold); }
 .st-auth h1 { font-size: 26px; text-align: center; }
 
+/* ---------- Home page sections ---------- */
+.st-section { margin-top: 64px; }
+.st-section-head { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin-bottom: 22px; flex-wrap: wrap; }
+.st-section-head h2 { font-size: 28px; margin-top: 4px; }
+.st-features { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+.st-feature { display: flex; gap: 14px; align-items: flex-start; padding: 20px; background: #fff; border: 1px solid var(--line); border-radius: 14px; }
+.st-feature-icon { width: 44px; height: 44px; flex-shrink: 0; display: grid; place-items: center; border-radius: 12px; background: var(--gold-soft); font-size: 22px; }
+.st-feature strong { color: var(--navy); }
+.st-feature p { font-size: 13px; color: var(--muted); margin-top: 2px; }
+
+.st-tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
+.st-tile { display: flex; flex-direction: column; background: #fff; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; transition: transform 0.25s, box-shadow 0.25s; }
+.st-tile:hover { transform: translateY(-4px); box-shadow: 0 26px 50px -28px rgba(20, 33, 61, 0.55); }
+.st-tile-img { position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: linear-gradient(135deg, var(--navy-2), var(--navy)); }
+.st-tile-img img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; }
+.st-tile:hover .st-tile-img img { transform: scale(1.07); }
+.st-tile-tag { position: absolute; left: 12px; top: 12px; padding: 3px 10px; border-radius: 999px; background: rgba(20, 33, 61, 0.78); backdrop-filter: blur(4px); color: #fff; font-size: 12px; font-weight: 600; }
+.st-tile-tag.st-stars { color: var(--gold-2); letter-spacing: 1px; }
+.st-tile-body { display: grid; gap: 4px; padding: 14px 16px 16px; flex: 1; align-content: start; }
+.st-tile-body h3 { font-size: 17px; line-height: 1.3; }
+.st-tile-city { font-size: 12.5px; color: var(--muted); }
+.st-tile-price { margin-top: auto; padding-top: 6px; font-size: 13px; color: var(--muted); }
+.st-tile-price strong { font-family: var(--font-display), Georgia, serif; font-size: 19px; color: var(--navy); }
+
+.st-banner {
+  display: flex; align-items: center; justify-content: space-between; gap: 32px;
+  padding: 48px; border-radius: 18px; color: #d9d4c4; overflow: hidden;
+  background-size: cover; background-position: center;
+  box-shadow: inset 0 0 0 2000px rgba(13, 24, 46, 0.66);
+  transition: box-shadow 0.3s;
+}
+.st-banner:hover { box-shadow: inset 0 0 0 2000px rgba(13, 24, 46, 0.58); }
+.st-banner h2 { color: #fff; font-size: 30px; margin: 6px 0 10px; }
+.st-banner p { max-width: 560px; }
+
 /* ---------- Toast & dialog (shared components from components/admin use adm- class names) ---------- */
 .st-root .adm-toast {
   position: fixed; top: 84px; right: 20px; z-index: 1000; display: flex; align-items: center; gap: 12px;
@@ -291,6 +347,10 @@
 .st-input { min-width: 0; }
 .st-user a, .st-cart { white-space: nowrap; }
 @media (max-width: 960px) {
+  .st-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .st-features { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .st-footer-grid { grid-template-columns: 1fr 1fr; }
+  .st-banner { flex-direction: column; align-items: flex-start; padding: 32px; }
   .st-filter { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
   .st-filter > :first-child { grid-column: 1 / -1; }
   .st-two { grid-template-columns: 1fr; }
@@ -314,6 +374,14 @@
   .st-add { justify-content: flex-start; }
   .st-booking-row { grid-template-columns: 1fr; padding: 12px; }
   .st-booking-img { width: 100%; height: 140px; }
-  .st-pagehead h1 { font-size: 24px; }
+  .st-pagehead h1 { font-size: 26px; }
+  .st-tiles { gap: 12px; }
+  .st-tile-body { padding: 10px 12px 12px; }
+  .st-tile-body h3 { font-size: 15px; }
+  .st-features { grid-template-columns: 1fr; }
+  .st-section { margin-top: 44px; }
+  .st-section-head h2 { font-size: 23px; }
+  .st-banner { padding: 26px 22px; }
+  .st-banner h2 { font-size: 23px; }
   .st-root .adm-toast { top: auto; bottom: 16px; left: 16px; right: 16px; max-width: none; }
 }

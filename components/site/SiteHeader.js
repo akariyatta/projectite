@@ -12,7 +12,7 @@ export default async function SiteHeader() {
         <nav className="st-nav">
           <Link href="/hotels">ที่พัก</Link>
           <Link href="/flights">เที่ยวบิน</Link>
-          <Link href="/events">งาน & สวนสนุก</Link>
+          <Link href="/events">ที่เที่ยว & กิจกรรม</Link>
           <Link href="/plans/new">✨ วางแผนเที่ยว</Link>
         </nav>
         <div className="st-actions">
