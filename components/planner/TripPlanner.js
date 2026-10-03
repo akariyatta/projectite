@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState, useTransition } from "react";
-import { baht } from "@/lib/format";
+import { baht, CITY_TH } from "@/lib/format";
 import { sized } from "@/lib/images";
 import "./planner.css";
 
@@ -197,7 +197,7 @@ export default function TripPlanner({ id, initial, customers, catalog, aiEnabled
           {field("destination", "ปลายทาง *", (
             <select className="tp-input" value={meta.destination} onChange={set("destination")}>
               <option value="">— เลือกเมือง —</option>
-              {cities.map((c) => <option key={c} value={c}>{c}</option>)}
+              {cities.map((c) => <option key={c} value={c}>{CITY_TH[c] ? `${CITY_TH[c]} · ${c}` : c}</option>)}
             </select>
           ))}
           {field("start_date", "วันเริ่มเดินทาง *", <input type="date" className="tp-input" value={meta.start_date} onChange={set("start_date")} />)}

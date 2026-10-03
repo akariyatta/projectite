@@ -1,11 +1,12 @@
 import AddToCart from "@/components/site/AddToCart";
-import { addDaysStr, normalizeCity, popularCities, searchFlights, todayStr } from "@/lib/catalog";
+import { addDaysStr, CITY_TH, normalizeCity, popularCities, searchFlights, todayStr } from "@/lib/catalog";
 import { baht } from "@/lib/format";
-import { cityPhoto, sized } from "@/lib/images";
+import { CITY_PHOTOS, cityPhoto, sized } from "@/lib/images";
 
 export const metadata = { title: "ค้นหาเที่ยวบิน · Hotel Travel" };
 
-const CLASS_TH = { economy: "ชั้นประหยัด", business: "ชั้นธุรกิจ", first: "ชั้นหนึ่ง" };
+const MAX_SHOWN = 40;
+const CLASS_TH ={ economy: "ชั้นประหยัด", business: "ชั้นธุรกิจ", first: "ชั้นหนึ่ง" };
 const thaiDate = (d) => new Date(`${d}T00:00:00`).toLocaleDateString("th-TH-u-ca-gregory", { weekday: "short", day: "numeric", month: "short", year: "numeric" });
 function duration(a, b) {
   const m = Math.round((new Date(b.replace(" ", "T")) - new Date(a.replace(" ", "T"))) / 60000);
@@ -22,10 +23,10 @@ export default async function Flights({ searchParams }) {
 
   return (
     <>
-      <div className="st-pagehead">
+      <div className={`st-pagehead ${CITY_PHOTOS[to] ? "has-photo" : ""}`} style={CITY_PHOTOS[to] ? { "--photo": `url(${sized(CITY_PHOTOS[to], 1600)})` } : undefined}>
         <div className="st-wrap">
           <div className="st-eyebrow">Flights</div>
-          <h1>{from || to ? `เที่ยวบิน ${from || "ทุกที่"} → ${to || "ทุกที่"}` : "เที่ยวบินทั้งหมด"}</h1>
+          <h1>{from || to ? `เที่ยวบิน ${CITY_TH[from] ?? (from || "ทุกที่")} → ${CITY_TH[to] ?? (to || "ทุกที่")}` : "เที่ยวบินทั้งหมด"}</h1>
           <div>{date ? `${thaiDate(date)} (±3 วัน)` : "ทุกวันที่เปิดขาย"} · ผู้โดยสาร {passengers} คน</div>
         </div>
       </div>
@@ -40,7 +41,10 @@ export default async function Flights({ searchParams }) {
           <button className="st-btn">ค้นหา</button>
         </form>
 
-        <span className="st-muted">พบ {flights.length} เที่ยวบิน{date ? " ใกล้วันที่เลือก" : ""}</span>
+        <span className="st-muted">
+          พบ {flights.length} เที่ยวบิน{date ? " ใกล้วันที่เลือก" : ""}
+          {flights.length > MAX_SHOWN && ` · แสดง ${MAX_SHOWN} เที่ยวแรก — ระบุต้นทาง ปลายทาง หรือวันที่เพื่อดูเที่ยวอื่น`}
+        </span>
         {flights.length === 0 && (
           <div className="st-card st-empty">
             ไม่พบเที่ยวบิน{date ? "ในช่วง ±3 วันจากวันที่เลือก" : ""} — ลองเปลี่ยนวันที่ หรือเว้นว่างต้นทาง/ปลายทาง
@@ -48,7 +52,7 @@ export default async function Flights({ searchParams }) {
         )}
 
         <div className="st-results">
-          {flights.map((f) => (
+          {flights.slice(0, MAX_SHOWN).map((f) => (
             <div key={f.id} className="st-result st-flight">
               <div className="st-flight-img" style={{ backgroundImage: `url(${sized(cityPhoto(f.toCity), 500)})` }}>
                 <span>{f.toCity}</span>

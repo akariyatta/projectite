@@ -346,13 +346,14 @@ export default function HotelPlaneBooking({ cities = [], destinations = [] }) {
         </div>
 
         <div className="destinations">
+          <p className="destinationsEyebrow">Destinations</p>
           <h2 className="destinationsTitle">จุดหมายยอดนิยม</h2>
           <div className="destinationsRow">
-            {destinations.map((d) => (
+            {destinations.map((d, i) => (
               <button
                 key={d.city}
                 className="destCard"
-                style={d.image_url ? { backgroundImage: `url(${d.image_url.replace(/([?&])w=\d+/, "$1w=480")})` } : undefined}
+                style={d.image_url ? { backgroundImage: `url(${d.image_url.replace(/([?&])w=\d+/, i === 0 ? "$1w=1000" : "$1w=600")})` } : undefined}
                 onClick={() => go("/hotels", { city: d.city, check_in: checkIn, check_out: checkOut, guests, rooms: rooms.length })}
               >
                 <span className="destCardOverlay" />
@@ -433,14 +434,18 @@ export default function HotelPlaneBooking({ cities = [], destinations = [] }) {
         }
         .hero {
           position: relative;
-          background: #14213d;
+          background-color: #14213d;
+          background-image: linear-gradient(180deg, rgba(13, 24, 46, 0.55) 0%, rgba(13, 24, 46, 0.45) 45%, rgba(13, 24, 46, 0.9) 100%),
+            url("https://images.unsplash.com/photo-1506665531195-3566af2b4dfa?w=2000&q=80&auto=format&fit=crop");
+          background-size: cover;
+          background-position: center 40%;
           overflow: hidden;
         }
         .heroInner {
           position: relative;
           max-width: 1152px;
           margin: 0 auto;
-          padding: 56px 24px 112px;
+          padding: 96px 24px 150px;
           text-align: center;
         }
         .heroStars {
@@ -451,24 +456,29 @@ export default function HotelPlaneBooking({ cities = [], destinations = [] }) {
         }
         .hero .heroTitle {
           font-family: var(--font-display), var(--font-serif-th), Georgia, serif;
-          font-size: 32px;
+          font-size: clamp(30px, 5vw, 52px);
+          line-height: 1.2;
           color: #fff;
           margin: 0;
+          text-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
         }
         .heroSubtitle {
-          margin-top: 12px;
-          font-size: 14px;
-          color: #c9c2ac;
+          margin-top: 14px;
+          font-size: 16px;
+          color: #e6e1d3;
+          text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
         }
         .searchSection {
           position: relative; /* sit above the hero, which is position: relative too */
           z-index: 1;
-          max-width: 960px;
-          margin: -80px auto 0;
-          padding: 0 24px 64px;
+          max-width: 1152px;
+          margin: -96px auto 0;
+          padding: 0 24px;
         }
         .searchCard {
-          border-radius: 10px;
+          max-width: 912px;
+          margin: 0 auto;
+          border-radius: 14px;
           border: 1px solid #e3dcc9;
           background: #fff;
           box-shadow: 0 20px 50px -20px rgba(20, 33, 61, 0.35);
@@ -803,45 +813,89 @@ export default function HotelPlaneBooking({ cities = [], destinations = [] }) {
         .destinations {
           margin-top: 56px;
         }
+        .destinationsEyebrow {
+          margin: 0;
+          font-size: 12px;
+          letter-spacing: 0.3em;
+          text-transform: uppercase;
+          color: #c9973b;
+        }
         .destinationsTitle {
-          margin: 0 0 20px;
-          font-family: Georgia, serif;
-          font-size: 20px;
+          margin: 4px 0 22px;
+          font-family: var(--font-display), var(--font-serif-th), Georgia, serif;
+          font-size: 28px;
           color: #14213d;
         }
+        /* bento grid: the first two cities get the big tiles */
         .destinationsRow {
-          display: flex;
-          gap: 16px;
-          overflow-x: auto;
-          padding-bottom: 8px;
+          display: grid;
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+          grid-auto-rows: 150px;
+          grid-auto-flow: dense;
+          gap: 14px;
         }
         .destCard {
           position: relative;
-          flex-shrink: 0;
-          width: 176px;
-          height: 128px;
-          border-radius: 6px;
-          border: 1px solid #e3dcc9;
+          border-radius: 14px;
+          border: 0;
           overflow: hidden;
           cursor: pointer;
           padding: 0;
+          background-size: cover;
+          background-position: center;
+          text-align: left;
+          transition: transform 0.25s, box-shadow 0.25s;
+        }
+        .destCard:nth-child(1) {
+          grid-column: span 2;
+          grid-row: span 2;
+        }
+        .destCard:nth-child(2) {
+          grid-column: span 2;
+        }
+        .destCard:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 24px 44px -24px rgba(20, 33, 61, 0.65);
         }
         .destCardOverlay {
           position: absolute;
           inset: 0;
-          background: linear-gradient(to top, rgba(20, 33, 61, 0.92), rgba(20, 33, 61, 0.25));
-          opacity: 0.9;
+          background: linear-gradient(to top, rgba(13, 24, 46, 0.85), rgba(13, 24, 46, 0.05) 65%);
+          transition: opacity 0.25s;
         }
         .destCard:hover .destCardOverlay {
-          opacity: 0.75;
+          opacity: 0.8;
         }
         .destCardLabel {
           position: absolute;
-          bottom: 12px;
-          left: 12px;
-          font-family: Georgia, serif;
-          font-size: 15px;
+          bottom: 14px;
+          left: 16px;
+          display: grid;
+          font-family: var(--font-display), var(--font-serif-th), Georgia, serif;
+          font-size: 20px;
           color: #fff;
+        }
+        .destCard:nth-child(1) .destCardLabel {
+          font-size: 30px;
+          bottom: 22px;
+          left: 24px;
+        }
+        .destCardSub {
+          font-family: var(--font-body), sans-serif;
+          font-size: 12.5px;
+          color: #e4c588;
+        }
+        @media (max-width: 760px) {
+          .destinationsRow {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            grid-auto-rows: 120px;
+          }
+          .destCard:nth-child(1) .destCardLabel {
+            font-size: 24px;
+          }
+          .heroInner {
+            padding: 64px 16px 120px;
+          }
         }
         .footer {
           border-top: 1px solid #e3dcc9;

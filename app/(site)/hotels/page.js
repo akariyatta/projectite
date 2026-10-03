@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { CITY_TH, normalizeCity, popularCities, searchFlights, searchHotels, stayDates } from "@/lib/catalog";
 import { baht } from "@/lib/format";
+import { CITY_PHOTOS, sized } from "@/lib/images";
 
 export const metadata = { title: "ค้นหาที่พัก · Hotel Travel" };
 
@@ -24,7 +25,7 @@ export default async function Hotels({ searchParams }) {
 
   return (
     <>
-      <div className="st-pagehead">
+      <div className={`st-pagehead ${CITY_PHOTOS[city] ? "has-photo" : ""}`} style={CITY_PHOTOS[city] ? { "--photo": `url(${sized(CITY_PHOTOS[city], 1600)})` } : undefined}>
         <div className="st-wrap">
           <div className="st-eyebrow">Stay</div>
           <h1>{city ? `ที่พักใน ${CITY_TH[city] ?? city}` : "ที่พักทั้งหมด"}</h1>

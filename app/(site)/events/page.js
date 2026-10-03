@@ -2,37 +2,56 @@ import Link from "next/link";
 import AddToCart from "@/components/site/AddToCart";
 import { CITY_TH, normalizeCity, searchEvents, todayStr } from "@/lib/catalog";
 import { baht, label } from "@/lib/format";
+import { cityPhoto, sized } from "@/lib/images";
 
-export const metadata = { title: "งานและสวนสนุก · Hotel Travel" };
+export const metadata = { title: "ที่เที่ยวและกิจกรรม · Hotel Travel" };
+
+const CATEGORIES = ["attraction", "theme_park", "concert", "exhibition", "sport"];
 
 const thaiDate = (d) => new Date(`${d}T00:00:00`).toLocaleDateString("th-TH-u-ca-gregory", { day: "numeric", month: "short", year: "numeric" });
 
 export default async function Events({ searchParams }) {
   const sp = await searchParams;
   const city = normalizeCity(sp.city);
-  const [events, all] = await Promise.all([searchEvents({ city }), searchEvents({})]);
+  const type = CATEGORIES.includes(sp.type) ? sp.type : "";
+  const [events, all] = await Promise.all([searchEvents({ city, category: type }), searchEvents({})]);
   const cities = [...new Set(all.map((e) => e.city))];
+  const types = CATEGORIES.filter((c) => all.some((e) => e.category === c && (!city || e.city === city)));
+  const href = (q) => {
+    const p = new URLSearchParams({ ...(city && { city }), ...(type && { type }), ...q });
+    for (const [k, v] of [...p]) if (!v) p.delete(k);
+    return `/events${p.size ? `?${p}` : ""}`;
+  };
   const today = todayStr();
 
   return (
     <>
-      <div className="st-pagehead">
+      <div className={`st-pagehead ${city ? "has-photo" : ""}`} style={city ? { "--photo": `url(${sized(cityPhoto(city), 1600)})` } : undefined}>
         <div className="st-wrap">
-          <div className="st-eyebrow">Experiences</div>
-          <h1>{city ? `งานและสวนสนุกใน ${CITY_TH[city] ?? city}` : "งานและสวนสนุก"}</h1>
-          <div>Disneyland, Universal Studios, คอนเสิร์ต และอีกมากมาย</div>
+          <div className="st-eyebrow">Things to do</div>
+          <h1>{city ? `ที่เที่ยวและกิจกรรมใน ${CITY_TH[city] ?? city}` : "ที่เที่ยวและกิจกรรม"}</h1>
+          <div>สถานที่ท่องเที่ยว ทัวร์ สวนสนุก Disneyland โชว์ และเทศกาล — จองตั๋วล่วงหน้าได้ทันที</div>
         </div>
       </div>
 
       <div className="st-wrap st-pull st-stack">
-        <div className="st-card st-pills">
-          <Link href="/events" className={`st-pill ${!city ? "active" : ""}`}>ทุกเมือง</Link>
-          {cities.map((c) => (
-            <Link key={c} href={`/events?city=${encodeURIComponent(c)}`} className={`st-pill ${city === c ? "active" : ""}`}>{CITY_TH[c] ?? c}</Link>
-          ))}
+        <div className="st-card st-stack" style={{ padding: 20 }}>
+          <div className="st-pills">
+            <Link href={href({ city: "" })} className={`st-pill ${!city ? "active" : ""}`}>🌏 ทุกเมือง</Link>
+            {cities.map((c) => (
+              <Link key={c} href={href({ city: c })} className={`st-pill ${city === c ? "active" : ""}`}>{CITY_TH[c] ?? c}</Link>
+            ))}
+          </div>
+          <div className="st-pills" style={{ marginTop: 12 }}>
+            <Link href={href({ type: "" })} className={`st-pill ${!type ? "active" : ""}`}>ทุกหมวด</Link>
+            {types.map((c) => (
+              <Link key={c} href={href({ type: c })} className={`st-pill ${type === c ? "active" : ""}`}>{label(c)}</Link>
+            ))}
+          </div>
         </div>
 
-        {events.length === 0 && <div className="st-card st-empty">ยังไม่มีงานที่เปิดขายในเมืองนี้</div>}
+        <span className="st-muted">พบ {events.length} รายการ</span>
+        {events.length === 0 && <div className="st-card st-empty">ยังไม่มีรายการที่เปิดขายตามที่เลือก</div>}
 
         {events.map((e) => {
           const min = e.start_date > today ? e.start_date : today;

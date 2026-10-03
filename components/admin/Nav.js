@@ -17,7 +17,7 @@ const GROUPS = [
     title: "การเดินทาง",
     links: [
       { href: "/admin/flights", icon: "✈️", label: "เที่ยวบิน" },
-      { href: "/admin/events", icon: "🎢", label: "งาน / สวนสนุก" },
+      { href: "/admin/events", icon: "🎢", label: "ที่เที่ยว / งาน" },
       { href: "/admin/event_tickets", icon: "🎟️", label: "ประเภทตั๋ว" },
       { href: "/admin/trip_plans", icon: "🤖", label: "แผนเที่ยว AI" },
     ],

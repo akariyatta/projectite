@@ -43,7 +43,7 @@ export default function CartView({ signedIn }) {
         <div className="st-row" style={{ justifyContent: "center", marginTop: 12 }}>
           <Link href="/hotels" className="st-btn">หาที่พัก</Link>
           <Link href="/flights" className="st-btn-ghost">หาเที่ยวบิน</Link>
-          <Link href="/events" className="st-btn-ghost">ตั๋วงาน & สวนสนุก</Link>
+          <Link href="/events" className="st-btn-ghost">ที่เที่ยว & กิจกรรม</Link>
         </div>
       </div>
     );
