@@ -40,7 +40,7 @@ export default async function PlanPage({ params, searchParams }) {
       </div>
       <div className="st-wrap st-pull">
         {!user && (
-          <div className="st-alert st-alert-info" style={{ marginBottom: 16 }}>
+          <div className="st-alert st-alert-info" style={{ marginBottom: 28 }}>
             ลองวางแผนได้เลยโดยไม่ต้องเข้าสู่ระบบ — <Link href="/signin?next=/plans/new" className="st-link">เข้าสู่ระบบ</Link> เพื่อบันทึกแผนไว้ดูภายหลัง
           </div>
         )}
