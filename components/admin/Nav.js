@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useRef } from "react";
 
 const GROUPS = [
   { title: "ภาพรวม", links: [{ href: "/admin", icon: "◆", label: "แดชบอร์ด" }, { href: "/admin/bookings", icon: "🧾", label: "การจอง" }, { href: "/admin/reports", icon: "📈", label: "รายงานยอดขาย" }] },
@@ -36,8 +37,13 @@ const GROUPS = [
 
 export default function Nav() {
   const path = usePathname();
+  const ref = useRef(null);
+  // On short screens the menu scrolls — keep the current page visible in it
+  useEffect(() => {
+    ref.current?.querySelector("a.active")?.scrollIntoView({ block: "nearest" });
+  }, [path]);
   return (
-    <nav className="adm-nav">
+    <nav className="adm-nav" ref={ref}>
       {GROUPS.map((g) => (
         <div key={g.title} style={{ display: "contents" }}>
           <div className="adm-nav-group">{g.title}</div>

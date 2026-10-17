@@ -35,6 +35,7 @@
 .st-main { flex: 1; }
 .st-wrap { max-width: 1152px; margin: 0 auto; padding: 0 24px; }
 .st-stack > * + * { margin-top: 24px; }
+.st-stack > span { display: block; } /* inline text (e.g. "พบ 12 รายการ") ignores margin-top otherwise */
 .st-muted { color: var(--muted); }
 .st-link { color: var(--gold); font-weight: 500; }
 .st-link:hover { text-decoration: underline; }
@@ -131,7 +132,7 @@
 }
 .st-card h2 { font-size: 20px; margin-bottom: 12px; }
 .st-filter { display: grid; grid-template-columns: 2fr 1fr 1fr 110px 110px auto; gap: 12px; align-items: end; }
-.st-field { display: grid; gap: 4px; min-width: 0; }
+.st-field { display: grid; gap: 7px; min-width: 0; }
 .st-field > span { font-size: 11.5px; color: #a69b84; letter-spacing: 0.04em; }
 .st-field.has-error > span { color: var(--danger); }
 .st-input {
@@ -178,7 +179,7 @@
 .st-alert-info { background: var(--gold-soft); border: 1px solid #ecdcb8; color: #6d5220; }
 .st-empty { text-align: center; padding: 48px 16px; color: var(--muted); }
 
-.st-badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; background: #eef0f3; color: #4b5160; white-space: nowrap; }
+.st-badge { display: inline-block; padding: 4px 11px; line-height: 1.35; border-radius: 999px; font-size: 12px; font-weight: 600; background: #eef0f3; color: #4b5160; white-space: nowrap; }
 .st-badge--pending { background: #fbf1dc; color: #8a5a12; }
 .st-badge--confirmed { background: #e3eaf6; color: #1d3a6e; }
 .st-badge--completed, .st-badge--paid, .st-badge--ok { background: #e2f1e8; color: #226246; }
@@ -252,6 +253,7 @@
 .st-line { display: grid; grid-template-columns: 1fr auto auto; gap: 12px; align-items: center; padding: 14px 0; border-top: 1px solid #ede7da; }
 .st-line:first-child { border-top: 0; }
 .st-line-main { display: flex; gap: 14px; align-items: center; min-width: 0; }
+.st-line-main > div { display: grid; gap: 2px; overflow-wrap: anywhere; }
 .st-line-img { width: 72px; height: 56px; flex-shrink: 0; object-fit: cover; border-radius: 8px; background: var(--gold-soft); }
 .st-total { display: flex; justify-content: space-between; align-items: baseline; padding-top: 14px; margin-top: 8px; border-top: 2px solid var(--navy); }
 .st-methods { display: grid; gap: 10px; }
@@ -373,6 +375,8 @@
   .st-item img, .st-item .st-thumb { width: 100%; height: 160px; }
   .st-add { justify-content: flex-start; }
   .st-booking-row { grid-template-columns: 1fr; padding: 12px; }
+  .st-line { grid-template-columns: 1fr auto; row-gap: 10px; } /* phone: item on its own row, qty + price below */
+  .st-line-main { grid-column: 1 / -1; }
   .st-booking-img { width: 100%; height: 140px; }
   .st-pagehead h1 { font-size: 26px; }
   .st-tiles { gap: 12px; }

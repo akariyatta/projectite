@@ -45,7 +45,7 @@ export default async function MyPlans() {
                 {plan.summary && <p style={{ fontSize: 13.5 }}>{plan.summary}</p>}
                 <div className="st-row" style={{ justifyContent: "space-between", marginTop: "auto", paddingTop: 8, borderTop: "1px solid var(--line)" }}>
                   <strong className="st-price" style={{ fontSize: 20 }}>{baht(cost)}</strong>
-                  <div className="st-row" style={{ gap: 4 }}>
+                  <div className="st-row" style={{ gap: 8 }}>
                     <Link href={`/plans/${p.id}`} className="st-btn-ghost" style={{ padding: "7px 14px" }}>เปิด</Link>
                     <form action={deleteMyTrip.bind(null, p.id)}>
                       <ConfirmButton className="st-btn-ghost" confirmLabel="ลบแผน" title={`ลบแผน “${p.title}”?`} message="แผนที่ลบแล้วกู้คืนไม่ได้">ลบ</ConfirmButton>

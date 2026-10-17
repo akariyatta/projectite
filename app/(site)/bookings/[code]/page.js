@@ -36,7 +36,7 @@ export default async function BookingPage({ params }) {
         <div className="st-wrap">
           <Link href="/bookings" className="st-link">← การจองของฉัน</Link>
           <h1>การจอง {booking.booking_code}</h1>
-          <div className="st-row" style={{ gap: 8 }}>
+          <div className="st-row" style={{ gap: 8, marginTop: 10 }}>
             <span className={`st-badge st-badge--${booking.status}`}>{label(booking.status)}</span>
             <span>จองเมื่อ {thaiDate(booking.created_at)} {booking.created_at.slice(11, 16)}</span>
           </div>
