@@ -28,6 +28,7 @@ const GROUPS = [
     title: "ระบบ",
     links: [
       { href: "/admin/admins", icon: "🔐", label: "ผู้ดูแลระบบ" },
+      { href: "/admin/security", icon: "🛡️", label: "ความปลอดภัยของฉัน" },
       { href: "/admin/audit", icon: "📜", label: "บันทึกการแก้ไข" },
       { href: "/admin/emails", icon: "✉️", label: "อีเมล" },
       { href: "/admin/settings", icon: "⚙️", label: "การตั้งค่าระบบ" },

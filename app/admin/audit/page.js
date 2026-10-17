@@ -11,6 +11,7 @@ const ACTIONS = {
   status: { label: "เปลี่ยนสถานะ", style: "pending" },
   login: { label: "เข้าสู่ระบบ", style: "cancelled" },
   password: { label: "รหัสผ่าน", style: "refunded" },
+  "2fa": { label: "ยืนยัน 2 ขั้น", style: "paid" },
 };
 const ENTITY_TH = {
   hotels: "โรงแรม", rooms: "ห้องพัก", flights: "เที่ยวบิน", events: "งาน", event_tickets: "ตั๋ว",

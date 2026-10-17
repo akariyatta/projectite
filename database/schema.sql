@@ -16,6 +16,10 @@ CREATE TABLE IF NOT EXISTS users (
   phone         VARCHAR(30),
   status        ENUM('active','banned') NOT NULL DEFAULT 'active',
   session_version INT NOT NULL DEFAULT 1,          -- เปลี่ยนรหัสแล้ว session เก่าทุกเครื่องหลุด
+  totp_secret   VARCHAR(255),                      -- 2FA (แอป Authenticator): secret ที่เข้ารหัสแล้ว
+  totp_enabled  TINYINT(1) NOT NULL DEFAULT 0,     -- 1 = ล็อกอินต้องใส่รหัส 6 หลักจากแอป
+  totp_last_step BIGINT,                           -- กันการใช้รหัสเดิมซ้ำ
+  backup_codes  TEXT,                              -- รหัสสำรอง (เก็บเป็น hash, JSON)
   created_at    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -29,6 +33,10 @@ CREATE TABLE IF NOT EXISTS admins (
   must_change_password TINYINT(1) NOT NULL DEFAULT 1, -- 1 = ต้องตั้งรหัสใหม่ก่อนใช้งาน (รหัสชั่วคราว)
   session_version      INT NOT NULL DEFAULT 1,     -- เพิ่มทุกครั้งที่เปลี่ยนรหัส → session เก่าทุกเครื่องหลุด
   password_changed_at  DATETIME,
+  totp_secret          VARCHAR(255),              -- 2FA (แอป Authenticator): secret ที่เข้ารหัสแล้ว
+  totp_enabled         TINYINT(1) NOT NULL DEFAULT 0,
+  totp_last_step       BIGINT,                    -- กันการใช้รหัสเดิมซ้ำ
+  backup_codes         TEXT,                      -- รหัสสำรอง (เก็บเป็น hash, JSON)
   created_at           DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 

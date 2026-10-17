@@ -1,20 +1,23 @@
 import Link from "next/link";
 import ActionForm from "@/components/site/ActionForm";
+import TwoFactorPanel from "@/components/two-factor/TwoFactor";
 import { requireCustomer } from "@/lib/customer";
 import { query } from "@/lib/db";
-import { changeMyPassword, updateProfile } from "@/lib/site-actions";
+import { changeMyPassword, confirmCustomerTwoFactor, disableCustomerTwoFactor, startCustomerTwoFactor, updateProfile } from "@/lib/site-actions";
+import { twoFactorStatus } from "@/lib/two-factor";
 
 export const metadata = { title: "บัญชีของฉัน · Hotel Travel" };
 
 export default async function Profile() {
   const user = await requireCustomer("/profile");
-  const [[stats]] = await Promise.all([
+  const [[stats], tfa] = await Promise.all([
     query(
       `SELECT (SELECT COUNT(*) FROM bookings WHERE user_id = ?) AS bookings,
               (SELECT COUNT(*) FROM trip_plans WHERE user_id = ?) AS plans,
               (SELECT created_at FROM users WHERE id = ?) AS since`,
       [user.id, user.id, user.id],
     ),
+    twoFactorStatus("customer", user.id),
   ]);
 
   return (
@@ -51,11 +54,22 @@ export default async function Profile() {
               submit="เปลี่ยนรหัสผ่าน"
             />
           </section>
+          <section id="two-factor">
+            <TwoFactorPanel
+              ui="st"
+              enabled={tfa.enabled}
+              backupLeft={tfa.backupLeft}
+              start={startCustomerTwoFactor}
+              confirm={confirmCustomerTwoFactor}
+              disable={disableCustomerTwoFactor}
+            />
+          </section>
         </div>
         <aside className="st-card st-sticky" style={{ display: "grid", gap: 10 }}>
           <h2 style={{ margin: 0 }}>ทางลัด</h2>
           <Link href="/bookings" className="st-btn-ghost">🧾 การจองของฉัน ({stats.bookings})</Link>
           <Link href="/plans" className="st-btn-ghost">✨ แผนเที่ยวของฉัน ({stats.plans})</Link>
+          <a href="#two-factor" className="st-btn-ghost">{tfa.enabled ? "🛡️ ยืนยัน 2 ขั้น: เปิดอยู่" : "🛡️ เปิดยืนยันตัวตน 2 ขั้น"}</a>
           <p className="st-muted" style={{ fontSize: 12.5 }}>อีเมลใช้สำหรับเข้าสู่ระบบและรับการยืนยันการจอง หากต้องการเปลี่ยนอีเมล กรุณาติดต่อเจ้าหน้าที่</p>
         </aside>
       </div>

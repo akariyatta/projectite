@@ -9,10 +9,12 @@ export const metadata = { title: "เข้าสู่ระบบ · Hotel Tra
 
 export default async function LoginPage({ searchParams }) {
   if (await getAdmin()) redirect("/admin");
-  const { error, locked } = await searchParams;
+  const { error, locked, expired } = await searchParams;
   const message = locked
     ? `ใส่รหัสผิดหลายครั้งเกินไป — ลองใหม่ได้ในอีก ${Number(locked) || 15} นาที`
-    : error && "อีเมลหรือรหัสผ่านไม่ถูกต้อง";
+    : expired
+      ? "หมดเวลายืนยันตัวตน 2 ขั้น กรุณาเข้าสู่ระบบอีกครั้ง"
+      : error && "อีเมลหรือรหัสผ่านไม่ถูกต้อง";
 
   return (
     <div className={`adm-root adm-login ${adminFonts}`}>

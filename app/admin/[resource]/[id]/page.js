@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import AdminForm, { Field } from "@/components/admin/AdminForm";
+import ConfirmButton from "@/components/admin/ConfirmButton";
 import ImageInput from "@/components/admin/ImageInput";
 import { PageHead } from "@/components/admin/ui";
-import { saveResource } from "@/lib/actions";
+import { resetTwoFactorFor, saveResource } from "@/lib/actions";
 import { requireAdmin } from "@/lib/auth";
 import { query } from "@/lib/db";
 import { label } from "@/lib/format";
@@ -123,6 +124,26 @@ export default async function ResourceForm({ params }) {
           )}
         </div>
       </AdminForm>
+
+      {!isNew && (resource === "customers" || resource === "admins") && (
+        <div className="adm-card" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 16, flexWrap: "wrap" }}>
+          <div>
+            <h2 style={{ margin: 0 }}>ยืนยันตัวตน 2 ขั้น</h2>
+            <p className="adm-muted" style={{ fontSize: 13.5, marginTop: 4 }}>
+              {row.totp_enabled
+                ? "🛡️ เปิดอยู่ — ถ้าเจ้าของบัญชีทำมือถือหายและไม่มีรหัสสำรอง ปิดให้ได้ที่นี่ (ระบบจะแจ้งเจ้าตัวทางอีเมล)"
+                : "ปิดอยู่ — เจ้าของบัญชีเปิดเองได้ที่หน้า" + (resource === "admins" ? " ความปลอดภัยของฉัน" : " บัญชีของฉัน บนเว็บไซต์")}
+            </p>
+          </div>
+          {Boolean(row.totp_enabled) && (
+            <form action={resetTwoFactorFor.bind(null, resource, Number(id))}>
+              <ConfirmButton className="adm-btn adm-btn-red" confirmLabel="ปิด 2FA" title={`ปิด 2FA ของ ${displayName(res, row)}?`} message="บัญชีนี้จะเข้าสู่ระบบได้ด้วยรหัสผ่านอย่างเดียว จนกว่าเจ้าตัวจะเปิดใหม่">
+                ปิด 2FA ให้บัญชีนี้
+              </ConfirmButton>
+            </form>
+          )}
+        </div>
+      )}
     </div>
   );
 }
