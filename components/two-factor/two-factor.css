@@ -1,0 +1,34 @@
+/* Two-factor panels — shared by the customer site (st-) and admin (adm-); tf- prefix only */
+.tf-panel { display: grid; gap: 18px; }
+.tf-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+.tf-head p { margin-top: 4px; }
+.tf-pill { flex-shrink: 0; padding: 5px 12px; border-radius: 999px; font-size: 12.5px; font-weight: 600; background: #eceae6; color: #6b6760; white-space: nowrap; }
+.tf-pill.is-on { background: #e2f1e8; color: #226246; }
+.tf-stack { display: grid; gap: 14px; }
+.tf-row { display: flex; flex-wrap: wrap; gap: 10px; }
+
+.tf-steps { margin: 0; padding-left: 22px; display: grid; gap: 18px; font-size: 14.5px; }
+.tf-steps li { padding-left: 4px; }
+.tf-steps li > * { margin-top: 8px; }
+.tf-qr { display: block; width: 200px; height: 200px; padding: 8px; background: #fff; border: 1px solid #e3dcc9; border-radius: 12px; }
+.tf-secret { display: block; width: fit-content; max-width: 100%; padding: 8px 12px; border-radius: 8px; background: #f4f1ea; font-family: ui-monospace, Consolas, monospace; font-size: 14px; letter-spacing: 0.06em; overflow-wrap: anywhere; }
+.tf-confirm { display: flex; flex-wrap: wrap; gap: 10px; align-items: flex-start; }
+.tf-confirm > div { flex-basis: 100%; }
+
+.tf-code { font-family: ui-monospace, Consolas, monospace; font-size: 22px !important; letter-spacing: 0.35em; text-align: center; max-width: 220px; }
+.tf-code.is-backup { letter-spacing: 0.15em; }
+.tf-code-wrap { display: grid; gap: 8px; justify-items: start; }
+.tf-verify .tf-code-wrap { justify-items: center; }
+.tf-verify .tf-code { max-width: 100%; width: 100%; }
+.tf-verify { display: grid; gap: 14px; }
+.tf-switch { background: none; border: 0; padding: 0; font: inherit; font-size: 13px; color: #b9822b; cursor: pointer; }
+.tf-switch:hover { text-decoration: underline; }
+
+.tf-backup { margin: 0; padding: 14px 16px 14px 38px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px 24px; background: #f4f1ea; border-radius: 10px; font-family: ui-monospace, Consolas, monospace; font-size: 15px; letter-spacing: 0.05em; }
+.tf-details summary { cursor: pointer; font-size: 14px; color: #8e2d27; font-weight: 600; }
+.tf-danger { color: #8e2d27 !important; border-color: #efc9c5 !important; }
+
+@media (max-width: 520px) {
+  .tf-head { flex-direction: column; }
+  .tf-backup { grid-template-columns: 1fr; }
+}
