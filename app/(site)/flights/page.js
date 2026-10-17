@@ -20,6 +20,9 @@ export default async function Flights({ searchParams }) {
   const date = /^\d{4}-\d{2}-\d{2}$/.test(sp.date ?? "") && sp.date >= todayStr() ? sp.date : "";
   const passengers = Math.min(10, Math.max(1, Number(sp.passengers) || 1));
   const [flights, cities] = await Promise.all([searchFlights({ from, to, date, passengers }), popularCities()]);
+  // rotate through each city's photos in list order, so cards next to each other never share a picture
+  const seen = {};
+  const photo = (f) => cityPhoto(f.toCity, (seen[f.toCity] = (seen[f.toCity] ?? -1) + 1));
 
   return (
     <>
@@ -52,9 +55,9 @@ export default async function Flights({ searchParams }) {
         )}
 
         <div className="st-results">
-          {flights.slice(0, MAX_SHOWN).map((f) => (
+          {flights.slice(0, MAX_SHOWN).map((f) => ({ ...f, image: photo(f) })).map((f) => (
             <div key={f.id} className="st-result st-flight">
-              <div className="st-flight-img" style={{ backgroundImage: `url(${sized(cityPhoto(f.toCity), 500)})` }}>
+              <div className="st-flight-img" style={{ backgroundImage: `url(${sized(f.image, 500)})` }}>
                 <span>{f.toCity}</span>
               </div>
               <div className="st-result-body" style={{ gap: 12 }}>
@@ -83,7 +86,7 @@ export default async function Flights({ searchParams }) {
                     type: "flight", ref: f.id, flight_id: f.id,
                     label: `${f.airline} ${f.flight_no} ${f.origin} → ${f.destination}`,
                     sub: `${thaiDate(f.depart_at.slice(0, 10))} ${f.depart_at.slice(11, 16)} · ${CLASS_TH[f.seat_class]}`,
-                    unitPrice: f.price, image: cityPhoto(f.toCity),
+                    unitPrice: f.price, image: f.image,
                   }}
                 />
               </div>

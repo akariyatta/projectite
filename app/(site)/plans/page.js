@@ -36,7 +36,7 @@ export default async function MyPlans() {
             const cost = (plan.days ?? []).flatMap((d) => d.items ?? []).reduce((s, it) => s + (Number(it?.cost) || 0), 0);
             return (
               <div key={p.id} className="st-card" style={{ display: "grid", gap: 8, paddingTop: 0, overflow: "hidden" }}>
-                <Link href={`/plans/${p.id}`} className="st-plan-cover" style={{ backgroundImage: `url(${sized(cityPhoto(p.destination), 700)})` }} />
+                <Link href={`/plans/${p.id}`} className="st-plan-cover" style={{ backgroundImage: `url(${sized(cityPhoto(p.destination, p.id), 700)})` }} />
                 <span className={`st-badge ${p.source === "ai" ? "st-badge--confirmed" : "st-badge--pending"}`} style={{ justifySelf: "start" }}>
                   {p.source === "ai" ? `🤖 AI เสนอ${p.style ? ` · ${STYLE_TH[p.style]}` : ""}` : "✍️ วางเอง"}
                 </span>
