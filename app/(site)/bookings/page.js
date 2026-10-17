@@ -50,7 +50,7 @@ export default async function MyBookings() {
                     <span className={`st-badge st-badge--${b.status}`}>{label(b.status)}</span>
                     {b.status === "pending" && b.pay_status === "pending" && <span className="st-badge st-badge--pending">รอชำระเงิน</span>}
                   </div>
-                  <div className="st-muted" style={{ fontSize: 13, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{b.items}</div>
+                  <div className="st-muted" style={{ fontSize: 13, marginTop: 6, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{b.items}</div>
                 </div>
                 <div className="st-muted" style={{ fontSize: 13 }}>🗓 {thaiDate(b.trip_start)} – {thaiDate(b.trip_end)}</div>
                 <strong className="st-price" style={{ fontSize: 20 }}>{baht(b.total_amount)}</strong>

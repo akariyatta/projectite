@@ -11,7 +11,7 @@
 }
 .tp-card h2, .tp-title { font-size: 20px; color: var(--navy); margin-bottom: 12px; }
 .tp-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-bottom: 16px; }
-.tp-field { display: grid; gap: 5px; min-width: 0; }
+.tp-field { display: grid; gap: 7px; min-width: 0; }
 .tp-field > span { font-size: 13px; font-weight: 600; color: var(--navy); }
 .tp-field.has-error > span { color: var(--danger); }
 .tp-wide { grid-column: 1 / -1; }
@@ -60,7 +60,7 @@ textarea.tp-input { resize: vertical; }
 .tp-btn-text:hover { background: var(--gold-soft); }
 .tp-danger { color: var(--danger); }
 
-.tp-badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; white-space: nowrap; }
+.tp-badge { display: inline-block; padding: 4px 11px; line-height: 1.35; border-radius: 999px; font-size: 12px; font-weight: 600; white-space: nowrap; }
 .tp-badge-ai { background: #e3eaf6; color: #1d3a6e; }
 .tp-badge-own { background: #fbf1dc; color: #8a5a12; }
 
@@ -72,12 +72,12 @@ textarea.tp-input { resize: vertical; }
 .tp-option-tag { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; color: var(--muted); }
 .tp-plan-title { font-family: var(--font-display), var(--font-serif-th), Georgia, serif; font-size: 19px; font-weight: 600; color: var(--navy); line-height: 1.3; }
 .tp-summary { font-size: 13.5px; color: #4b5160; }
-.tp-days { list-style: none; display: grid; gap: 4px; font-size: 13.5px; }
+.tp-days { list-style: none; display: grid; gap: 8px; font-size: 13.5px; }
 .tp-days li span {
   display: inline-block;
   min-width: 46px;
-  margin-right: 6px;
-  padding: 1px 8px;
+  margin-right: 8px;
+  padding: 3px 9px;
   border-radius: 999px;
   background: var(--gold-soft);
   color: #8a6a33;
@@ -92,8 +92,8 @@ textarea.tp-input { resize: vertical; }
 .tp-day-head { display: flex; gap: 10px; align-items: center; }
 .tp-day-num {
   flex-shrink: 0;
-  width: 52px;
-  height: 52px;
+  width: 56px;
+  height: 56px;
   border-radius: 12px;
   background: linear-gradient(135deg, var(--navy-2), var(--navy));
   color: var(--gold-2);
@@ -101,15 +101,16 @@ textarea.tp-input { resize: vertical; }
   place-items: center;
   text-align: center;
   font-size: 11px;
-  line-height: 1.1;
+  line-height: 1.25;
+  padding: 4px 0;
 }
 .tp-day-num strong { font-family: var(--font-display), Georgia, serif; font-size: 20px; }
-.tp-timeline { display: grid; gap: 8px; padding-left: 20px; border-left: 2px dashed var(--line); margin-left: 25px; }
+.tp-timeline { display: grid; gap: 12px; padding-left: 20px; border-left: 2px dashed var(--line); margin-left: 27px; }
 .tp-item {
   position: relative;
   display: grid;
   grid-template-columns: 34px 132px 1fr 120px auto;
-  gap: 10px;
+  gap: 10px 16px;
   align-items: center;
   padding: 10px;
   border-radius: 10px;
@@ -132,12 +133,12 @@ textarea.tp-input { resize: vertical; }
 .tp-item--hotel::before { background: #6b8f71; }
 .tp-item-icon { font-size: 20px; text-align: center; }
 .tp-item-time { padding: 8px; }
-.tp-item-body { display: grid; gap: 6px; min-width: 0; }
+.tp-item-body { display: grid; gap: 8px; min-width: 0; }
 .tp-item-body input[readonly] { background: transparent; border-color: transparent; font-weight: 600; padding-left: 0; }
 .tp-item-note { font-size: 13px; padding: 6px 10px; }
 .tp-item-cost { text-align: right; }
 .tp-item-actions { display: flex; }
-.tp-add { max-width: 420px; margin-left: 47px; color: var(--muted); }
+.tp-add { max-width: 420px; margin-left: 49px; color: var(--muted); }
 
 .tp-savebar {
   position: sticky;
@@ -211,10 +212,10 @@ textarea.tp-input { resize: vertical; }
 }
 .tp-item-photo span {
   position: absolute;
-  right: -6px;
-  bottom: -6px;
-  width: 24px;
-  height: 24px;
+  right: -7px;
+  bottom: -7px;
+  width: 27px;
+  height: 27px;
   border-radius: 50%;
   background: #fff;
   display: grid;
@@ -223,6 +224,6 @@ textarea.tp-input { resize: vertical; }
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 @media (max-width: 760px) {
-  .tp-item { grid-template-columns: 56px 1fr auto; }
+  .tp-item { grid-template-columns: 56px 1fr auto; row-gap: 18px; }
   .tp-banner { height: 110px; }
 }
